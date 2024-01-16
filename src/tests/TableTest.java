@@ -1,9 +1,13 @@
+package tests;
 import java.util.Set;
 
-public abstract class TableTest {
+import main.DataProcessor;
+import main.StringArrayWrapper;
 
-	DataProcessor dp;
-	Set<StringArrayWrapper> data;
+public class TableTest {
+
+	protected DataProcessor dp;
+	protected Set<StringArrayWrapper> data;
 	
 	public TableTest(String filepath) {
 		dp = new DataProcessor(filepath);

@@ -1,3 +1,4 @@
+package main;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -64,11 +65,67 @@ public class DataProcessor {
 		
 		// remove unneeded columns
 		for(String[] array : data) {
-			StringArrayWrapper gearData = new StringArrayWrapper(new String[] {array[6], array[7], array[8], array[9], array[10]});
+			StringArrayWrapper gearData = new StringArrayWrapper(new String[] {array[6], array[8], array[9], array[10]});
 			gearSet.add(gearData);
 		}
 		
 		return gearSet;
+	}
+	
+	public Set<StringArrayWrapper> getTeamTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> teamSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper teamData = new StringArrayWrapper(new String[] {array[12], array[13], array[14]});
+			teamSet.add(teamData);
+		}
+		
+		return teamSet;
+	}
+	
+	public Set<StringArrayWrapper> getMatchTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> matchSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper matchData = new StringArrayWrapper(new String[] {array[16], array[18], array[19]});
+			matchSet.add(matchData);
+		}
+		
+		return matchSet;
+	}
+	
+	public Set<StringArrayWrapper> getEventTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> eventSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper eventData = new StringArrayWrapper(new String[] {array[22], array[23], array[20], array[21], array[25]});
+			eventSet.add(eventData);
+		}
+		
+		return eventSet;
+	}
+	
+	public Set<StringArrayWrapper> getOrgTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> orgSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper orgData = new StringArrayWrapper(new String[] {array[28], array[27], array[26]});
+			orgSet.add(orgData);
+		}
+		
+		return orgSet;
 	}
 
 }

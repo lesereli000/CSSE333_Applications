@@ -1,3 +1,5 @@
+package tests;
+
 public class PlayerTableTest extends TableTest{
 
 	public PlayerTableTest(String filepath) {
@@ -7,7 +9,7 @@ public class PlayerTableTest extends TableTest{
 
 	public static void main(String[] args) {
 		
-		PlayerTableTest tester = new PlayerTableTest("src/data/SampleData.csv");
+		TableTest tester = new PlayerTableTest("src/data/SampleData.csv");
 		
 		tester.printData();
 	}

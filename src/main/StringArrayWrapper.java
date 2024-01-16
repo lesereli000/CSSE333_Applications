@@ -1,3 +1,4 @@
+package main;
 public class StringArrayWrapper implements Comparable<StringArrayWrapper>{
 
 	private String[] data;
@@ -21,7 +22,13 @@ public class StringArrayWrapper implements Comparable<StringArrayWrapper>{
 		if(this.size != other.size()) {
 			throw new IllegalArgumentException();
 		}
-		return this.data[0].compareTo(other.getData(0));
+		int comp = 0;
+		int i = 0;
+		while(comp == 0 && i < this.data.length) {
+			comp = this.data[i].compareTo(other.getData(i));
+			i++;
+		}
+		return comp;
 	}
 	
 	public String toString() {

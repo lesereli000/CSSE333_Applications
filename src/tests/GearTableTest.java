@@ -1,3 +1,5 @@
+package tests;
+
 public class GearTableTest extends TableTest{
 
 	public GearTableTest(String filepath) {
@@ -7,7 +9,7 @@ public class GearTableTest extends TableTest{
 
 	public static void main(String[] args) {
 		
-		GearTableTest tester = new GearTableTest("src/data/SampleData.csv");
+		TableTest tester = new GearTableTest("src/data/SampleData.csv");
 		
 		tester.printData();
 	}
