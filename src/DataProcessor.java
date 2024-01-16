@@ -12,9 +12,11 @@ import com.opencsv.exceptions.CsvException;
 public class DataProcessor {
 	
 	private String filepath;
+	List<String[]> data;
 	
 	public DataProcessor(String filepath) {
 		this.filepath = filepath;
+		data = getAllTuples();
 	}
 	
 	private List<String[]> getAllTuples() {
@@ -42,8 +44,6 @@ public class DataProcessor {
 	}
 	
 	public Set<StringArrayWrapper> getPlayerTableInfo() {
-		// get all data
-		List<String[]> data = getAllTuples();
 		
 		// use a set to automatically remove duplicates
 		Set<StringArrayWrapper> playerSet = new TreeSet<StringArrayWrapper>();
@@ -55,6 +55,20 @@ public class DataProcessor {
 		}
 		
 		return playerSet;
+	}
+	
+	public Set<StringArrayWrapper> getGearTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> gearSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper gearData = new StringArrayWrapper(new String[] {array[6], array[7], array[8], array[9], array[10]});
+			gearSet.add(gearData);
+		}
+		
+		return gearSet;
 	}
 
 }
