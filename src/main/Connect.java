@@ -9,39 +9,37 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 public class Connect {
+	private Connection connection = null;
 
-	private String dbServer;
-	private String dbName;
-	private String user;
-	private String pass;
-
-
+	private String url = "jdbc:sqlserver://${dbServer};databaseName=${dbName};"
+			+ "user=${user};password={${pass}};encrypt=false";
+	
+	private String fullUrl = url.replace("${dbServer}", "golem.csse.rose-hulman.edu")
+			.replace("${dbName}", "E-SportsDataTracking")
+			.replace("${user}", "CSSE330esportDataTracking")
+			.replace("${pass}", "esportTracking666!");
 
 	public void connect() {
-		// Construct the connection URL
-
-		String url = "jdbc:sqlserver://${dbServer};databaseName=${dbName};"
-				+ "user=${user};password={${pass}};encrypt=false";
 		
-		String fullUrl = url.replace("${dbServer}", "golem.csse.rose-hulman.edu")
-				.replace("${dbName}", "E-SportsDataTracking")
-				.replace("${user}", "CSSE330esportDataTracking")
-				.replace("${pass}", "esportTracking666!");
-
-		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(fullUrl);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (connection != null && !connection.isClosed())
-					connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
+	public Connection getConnection() {
+		return this.connection;
+	}
+	
+	public void closeconnection() {
+		try {
+	        if (this.connection != null && !this.connection.isClosed()) {
+	            this.connection.close();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 }
