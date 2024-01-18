@@ -127,5 +127,159 @@ public class DataProcessor {
 		
 		return orgSet;
 	}
+	
+	public Set<StringArrayWrapper> getHeldTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> heldSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper heldData = new StringArrayWrapper(new String[] {array[26], array[21]});
+			heldSet.add(heldData);
+		}
+		
+		return heldSet;
+	}
+	
+	public Set<StringArrayWrapper> getHasTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> hasSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper hasData = new StringArrayWrapper(new String[] {array[21], array[16]});
+			hasSet.add(hasData);
+		}
+		
+		return hasSet;
+	}
+	
+	public Set<StringArrayWrapper> getPlacedInTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> placedInSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper placedInData = new StringArrayWrapper(new String[] {array[12], array[21], array[29]});
+			placedInSet.add(placedInData);
+		}
+		
+		return placedInSet;
+	}
+	
+	public Set<StringArrayWrapper> getPlayedOnTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> playedOnSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper playedOnData = new StringArrayWrapper(new String[] {array[12], array[16]});
+			playedOnSet.add(playedOnData);
+		}
+		
+		return playedOnSet;
+	}
+	
+	public Set<StringArrayWrapper> getParticipateInTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> participateInSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper participateInData = new StringArrayWrapper(new String[] {array[0], array[16], array[19]});
+			participateInSet.add(participateInData);
+		}
+		
+		return participateInSet;
+	}
+	
+	public Set<StringArrayWrapper> getPlaysForTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> playsForSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper playsForData = new StringArrayWrapper(new String[] {array[0], array[12]});
+			playsForSet.add(playsForData);
+		}
+		
+		return playsForSet;
+	}
+	
+	public Set<StringArrayWrapper> getUsesTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> usesSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper usesData = new StringArrayWrapper(new String[] {array[0], array[6], array[11]});
+			usesSet.add(usesData);
+		}
+		
+		return usesSet;
+	}
+	
+	public Set<StringArrayWrapper> getPlayerRoleTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> playerRoleSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper playerRoleData = new StringArrayWrapper(new String[] {array[0], array[5]});
+			playerRoleSet.add(playerRoleData);
+		}
+		
+		return playerRoleSet;
+	}
+	
+	public Set<StringArrayWrapper> getRoleTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> roleSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper roleData = new StringArrayWrapper(new String[] {array[5]});
+			roleSet.add(roleData);
+		}
+		
+		return roleSet;
+	}
+	
+	public Set<StringArrayWrapper> getGearTypeTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> gearTypeSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper gearTypeData = new StringArrayWrapper(new String[] {array[6], array[7]});
+			gearTypeSet.add(gearTypeData);
+		}
+		
+		return gearTypeSet;
+	}
+	
+	public Set<StringArrayWrapper> getTypeTableInfo() {
+		
+		// use a set to automatically remove duplicates
+		Set<StringArrayWrapper> typeSet = new TreeSet<StringArrayWrapper>();
+		
+		// remove unneeded columns
+		for(String[] array : data) {
+			StringArrayWrapper typeData = new StringArrayWrapper(new String[] {array[7]});
+			typeSet.add(typeData);
+		}
+		
+		return typeSet;
+	}
 
 }

@@ -1,10 +1,10 @@
 package tests;
 
-public class PlayerTableTest extends TableTest{
+public class PlaysForTableTest extends TableTest{
 
-	public PlayerTableTest(String filepath) {
+	public PlaysForTableTest(String filepath) {
 		super(filepath);
-		data = dp.getPlayerTableInfo();
+		data = dp.getPlaysForTableInfo();
 	}
 
 	public static void main(String[] args) {
