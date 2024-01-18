@@ -15,9 +15,9 @@ public class Main {
 				+ "user=${user};password={${pass}};encrypt=false";
 		
 		String fullUrl = url.replace("${dbServer}", "golem.csse.rose-hulman.edu")
-							.replace("${dbName}", "FoodDeliverysongz1")
-							.replace("${user}", "FoodDeliveryUsersongz1")
-							.replace("${pass}", "Password123");
+							.replace("${dbName}", "E-SportsDataTracking")
+							.replace("${user}", "CSSE330esportDataTracking")
+							.replace("${pass}", "esportTracking666!");
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(fullUrl);
