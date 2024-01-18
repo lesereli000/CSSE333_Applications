@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import ui.TestUI;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -15,7 +17,7 @@ public class Main {
 		connect.connect();
 		System.out.println("hello");
 		connect.close();
-
+		TestUI ui = new TestUI();
 	}
 
 }
