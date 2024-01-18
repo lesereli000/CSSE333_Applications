@@ -12,17 +12,19 @@ public class Connect {
 	private Connection connection = null;
 
 	private String url = "jdbc:sqlserver://${dbServer};databaseName=${dbName};"
-			+ "user=${user};password={${pass}};encrypt=false";
+			+ "user=${user};password={${pass}};";
 	
 	private String fullUrl = url.replace("${dbServer}", "golem.csse.rose-hulman.edu")
 			.replace("${dbName}", "E-SportsDataTracking")
 			.replace("${user}", "CSSE330esportDataTracking")
-			.replace("${pass}", "esportTracking666!");
+			.replace("${pass}", "esportTracking666!")
+			+ "encrypt=true;trustServerCertificate=true";
 
 	public void connect() {
 		
 		try {
 			connection = DriverManager.getConnection(fullUrl);
+			System.out.println("Connection established");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
