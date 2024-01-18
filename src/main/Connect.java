@@ -22,6 +22,7 @@ public class Connect {
 
 		String url = "jdbc:sqlserver://${dbServer};databaseName=${dbName};"
 				+ "user=${user};password={${pass}};encrypt=false";
+		
 		String fullUrl = url.replace("${dbServer}", "golem.csse.rose-hulman.edu")
 				.replace("${dbName}", "E-SportsDataTracking")
 				.replace("${user}", "CSSE330esportDataTracking")
@@ -29,7 +30,7 @@ public class Connect {
 
 		Connection connection = null;
 		try {
-			connection = DriverManager.getConnection(url);
+			connection = DriverManager.getConnection(fullUrl);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
