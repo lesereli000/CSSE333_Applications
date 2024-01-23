@@ -1,0 +1,4 @@
+serverUsername=CSSE330esportDataTracking
+serverPassword=esportTracking666!
+databaseName=E-SportsDataTracking
+serverName=golem.csse.rose-hulman.edu

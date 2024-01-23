@@ -9,7 +9,7 @@ public class PlayerTableTest extends TableTest{
 
 	public static void main(String[] args) {
 		
-		TableTest tester = new PlaysForTableTest("src/data/SampleData.csv");
+		TableTest tester = new PlayerTableTest("src/data/SampleData.csv");
 		
 		tester.printData();
 	}
