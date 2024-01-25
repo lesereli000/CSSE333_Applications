@@ -40,20 +40,21 @@ public class Login {
 				return false;
 			}
 			
+			if(stmt.getInt(1) == 1) {
+				JOptionPane.showMessageDialog(null, "Login Error");
+			}
+			
 			String realPass = rs.getString("PasswordHash");
 			byte[] salt = dec.decode(rs.getString("PasswordSalt"));
 			this.connect.close();
 			
 			String userPass = this.hashPassword(salt, password);
 			
-//			System.out.println(userPass);
-//			System.out.println(realPass);
-			
 			if(userPass.equals(realPass)) {
 				return true;
 			}
 		} catch (SQLException e) {
-			// TODO show non-detailed error
+			JOptionPane.showMessageDialog(null, "Login Error");
 			e.printStackTrace();
 		}
 		return false;
@@ -78,7 +79,7 @@ public class Login {
 			connect.close();
 			return returnCode == 0;
 		} catch (SQLException e) {
-			// TODO show non-detailed error
+			JOptionPane.showMessageDialog(null, "Login Error");
 			e.printStackTrace();
 		}
 		return false;

@@ -21,7 +21,6 @@ public class Connect {
 				con = this.connect(fullUrl);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -49,7 +48,6 @@ public class Connect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		System.out.println("Not closed.");
 	}
 
 }
