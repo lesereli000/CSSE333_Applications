@@ -16,17 +16,23 @@ public class Connect {
 	}
 	
 	public Connection getConnection() {
-		if(this.con != null) {
-			return this.con;
+		try {
+			if(this.con == null || this.con.isClosed()) {
+				con = this.connect(fullUrl);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return this.connect(fullUrl);
+		
+		return this.con;
 	}
 
 	private Connection connect(String fullURL) {
 
 		try {
 			Connection connection = DriverManager.getConnection(fullURL);
-			System.out.println("Connection established");
+			System.out.println("Connection established.");
 			return connection;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -38,11 +44,12 @@ public class Connect {
 		try {
 			if (this.con != null && !this.con.isClosed()) {
 				this.con.close();
-				System.out.println("connection closed.");
+				System.out.println("Connection closed.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+//		System.out.println("Not closed.");
 	}
 
 }

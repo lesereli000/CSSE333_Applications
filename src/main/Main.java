@@ -1,7 +1,6 @@
 package main;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.Scanner;
 
 public class Main {
@@ -32,16 +31,13 @@ public class Main {
 		
 		//connect to db
 		Connect connect = new Connect(conInfo[0], conInfo[1], conInfo[2], conInfo[3]);
-		Connection con = connect.getConnection();
 		
 		//call the population scripts
 //		Populator p = new Populator(con);
 //		p.populateAll();
 		
+		@SuppressWarnings("unused")
 		UI ui = new UI(connect);
 		
-		// close the connection
-		connect.close();
-//		TestUI ui = new TestUI();
 	}
 }

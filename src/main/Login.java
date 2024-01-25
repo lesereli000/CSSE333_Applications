@@ -6,7 +6,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -29,11 +28,11 @@ public class Login {
 	}
 	
 	public boolean login(String username, String password) {
-		Connection con = this.connect.getConnection();
-		String query = "SELECT PasswordSalt, PasswordHash FROM [Login] WHERE Username = ?";
 		try {
-			PreparedStatement stmt = con.prepareStatement(query);
-			stmt.setString(1, username);
+			Connection con = this.connect.getConnection();
+			CallableStatement stmt = con.prepareCall("{? = call getLogin(?)}");
+			stmt.registerOutParameter(1, Types.INTEGER);
+			stmt.setString(2, username);
 			
 			ResultSet rs = stmt.executeQuery();
 			
@@ -43,17 +42,18 @@ public class Login {
 			
 			String realPass = rs.getString("PasswordHash");
 			byte[] salt = dec.decode(rs.getString("PasswordSalt"));
+			this.connect.close();
 			
 			String userPass = this.hashPassword(salt, password);
 			
-			System.out.println(userPass);
-			System.out.println(realPass);
+//			System.out.println(userPass);
+//			System.out.println(realPass);
 			
 			if(userPass.equals(realPass)) {
 				return true;
 			}
 		} catch (SQLException e) {
-			// show non-detailed error
+			// TODO show non-detailed error
 			e.printStackTrace();
 		}
 		return false;
@@ -64,8 +64,8 @@ public class Login {
 		String newPass = this.hashPassword(salt, password);
 		String newSalt = this.getStringFromBytes(salt);
 		
-		Connection con = connect.getConnection();
 		try {
+			Connection con = connect.getConnection();
 			CallableStatement cs = con.prepareCall("{? = call RegisterUser(?, ?, ?)}");
 			cs.registerOutParameter(1, Types.INTEGER);
 			cs.setString(2, username);
@@ -75,9 +75,10 @@ public class Login {
 			cs.execute();
 			
 			int returnCode = cs.getInt(1);
+			connect.close();
 			return returnCode == 0;
 		} catch (SQLException e) {
-			// show non-detailed error
+			// TODO show non-detailed error
 			e.printStackTrace();
 		}
 		return false;
