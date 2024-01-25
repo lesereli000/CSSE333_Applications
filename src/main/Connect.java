@@ -8,13 +8,22 @@ public class Connect {
 	private Connection con = null;
 
 	private String url = "jdbc:sqlserver://${dbServer};databaseName=${dbName};" + "user=${user};password={${pass}};encrypt=false";
+	private String fullUrl;
 
 	public Connect(String serverName, String dbName, String userName, String userPass) {
-		String fullUrl = url.replace("${dbServer}", serverName).replace("${dbName}", dbName).replace("${user}", userName).replace("${pass}", userPass);
+		fullUrl = url.replace("${dbServer}", serverName).replace("${dbName}", dbName).replace("${user}", userName).replace("${pass}", userPass);
 		this.con = connect(fullUrl);
 	}
 	
 	public Connection getConnection() {
+		try {
+			if(this.con == null || this.con.isClosed()) {
+				con = this.connect(fullUrl);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		return this.con;
 	}
 
@@ -22,7 +31,7 @@ public class Connect {
 
 		try {
 			Connection connection = DriverManager.getConnection(fullURL);
-			System.out.println("Connection established");
+			System.out.println("Connection established.");
 			return connection;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -34,7 +43,7 @@ public class Connect {
 		try {
 			if (this.con != null && !this.con.isClosed()) {
 				this.con.close();
-				System.out.println("connection closed.");
+				System.out.println("Connection closed.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
