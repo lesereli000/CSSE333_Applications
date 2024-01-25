@@ -1,12 +1,8 @@
 package main;
 
 import java.io.File;
-import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Main {
 
@@ -39,8 +35,10 @@ public class Main {
 		Connection con = connect.getConnection();
 		
 		//call the population scripts
-		Populator p = new Populator(con);
-		p.populateAll();
+//		Populator p = new Populator(con);
+//		p.populateAll();
+		
+		UI ui = new UI(connect);
 		
 		// close the connection
 		connect.close();

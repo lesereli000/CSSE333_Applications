@@ -8,14 +8,18 @@ public class Connect {
 	private Connection con = null;
 
 	private String url = "jdbc:sqlserver://${dbServer};databaseName=${dbName};" + "user=${user};password={${pass}};encrypt=false";
+	private String fullUrl;
 
 	public Connect(String serverName, String dbName, String userName, String userPass) {
-		String fullUrl = url.replace("${dbServer}", serverName).replace("${dbName}", dbName).replace("${user}", userName).replace("${pass}", userPass);
+		fullUrl = url.replace("${dbServer}", serverName).replace("${dbName}", dbName).replace("${user}", userName).replace("${pass}", userPass);
 		this.con = connect(fullUrl);
 	}
 	
 	public Connection getConnection() {
-		return this.con;
+		if(this.con != null) {
+			return this.con;
+		}
+		return this.connect(fullUrl);
 	}
 
 	private Connection connect(String fullURL) {
