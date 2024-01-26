@@ -40,23 +40,24 @@ public class Login {
 				return false;
 			}
 			
+			String realPass = rs.getString("PasswordHash");
+			byte[] salt = dec.decode(rs.getString("PasswordSalt"));
+			
+			String userPass = this.hashPassword(salt, password);
+			
 			if(stmt.getInt(1) == 1) {
 				JOptionPane.showMessageDialog(null, "Login Error");
 			}
 			
-			String realPass = rs.getString("PasswordHash");
-			byte[] salt = dec.decode(rs.getString("PasswordSalt"));
-			this.connect.close();
-			
-			String userPass = this.hashPassword(salt, password);
-			
 			if(userPass.equals(realPass)) {
+				this.connect.close();
 				return true;
 			}
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Login Error");
 			e.printStackTrace();
 		}
+		this.connect.close();
 		return false;
 	}
 
