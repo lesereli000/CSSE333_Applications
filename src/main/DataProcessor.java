@@ -65,7 +65,7 @@ public class DataProcessor {
 		
 		// remove unneeded columns
 		for(String[] array : data) {
-			StringArrayWrapper gearData = new StringArrayWrapper(new String[] {array[6], array[8], array[9], array[10]});
+			StringArrayWrapper gearData = new StringArrayWrapper(new String[] {array[6], array[8], array[7], array[9], array[10]});
 			gearSet.add(gearData);
 		}
 		
@@ -93,7 +93,7 @@ public class DataProcessor {
 		
 		// remove unneeded columns
 		for(String[] array : data) {
-			StringArrayWrapper matchData = new StringArrayWrapper(new String[] {array[16], array[18], array[19]});
+			StringArrayWrapper matchData = new StringArrayWrapper(new String[] {array[16], array[17], array[18]});
 			matchSet.add(matchData);
 		}
 		

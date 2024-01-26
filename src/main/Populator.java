@@ -8,21 +8,32 @@ import java.util.Set;
 
 public class Populator {
 
-	private Connection con;
+	private Connect connect;
 	private DataProcessor dp;
 	
-	public Populator(Connection con) {
+	public Populator(Connect connect) {
 		dp = new DataProcessor("src/data/SampleData.csv");
-		this.con = con;
+		this.connect = connect;
 	}
 	
 	public void populateAll() {
-//		populatePlayers();
-//		populateEvents();
+		populatePlayers();
+		populateEvents();
 		populateTeams();
+		populateGear();
+		populateMatch();
+		populateOrg();
+		populateHas();
+		populateHeld();
+		populateParticipateIn();
+		populatePlayedOn();
+		populatePlaysFor();
+		populatePlacedIn();
+		populateUses();
 	}
 
 	private void populatePlayers() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getPlayerTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -50,9 +61,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
 	
 	private void populateEvents() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getEventTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -78,9 +91,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
 	
 	private void populateTeams() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getTeamTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -105,18 +120,22 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
+	
 	private void populateGear() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getGearTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
 			try {
-				CallableStatement stmt = con.prepareCall("{? = call addGear(?, ?, ?, ?)}");
+				CallableStatement stmt = con.prepareCall("{? = call addGear(?, ?, ?, ?, ?)}");
 				stmt.registerOutParameter(1, Types.INTEGER);
 				stmt.setString(2, row.getData(0));
 				stmt.setString(3, row.getData(1));
 				stmt.setString(4, row.getData(2));
-				stmt.setString(4, row.getData(3));
+				stmt.setString(5, row.getData(3));
+				stmt.setString(6, row.getData(4));
 				
 				stmt.execute();
 				
@@ -133,35 +152,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
-	private void populateGearType() {
-		Set<StringArrayWrapper> dataSet = dp.getGearTypeTableInfo();
-		
-		for(StringArrayWrapper row : dataSet) {
-			try {
-				CallableStatement stmt = con.prepareCall("{? = call addGearType(?, ?)}");
-				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-				stmt.setString(3, row.getData(1));
-				
-				stmt.execute();
-				
-				int retCode = stmt.getInt(1);
-				if (retCode == 0){
-					System.out.println("Succesfull add");
-				} else if (retCode == 1) {
-					System.out.println("GearType already exists");
-				} else {
-					System.out.println("Unidentified return code");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				System.err.println("Call Failed for " + row.toString());
-			}
-		}
-		
-	}
+	
 	private void populateHas() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getHasTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -186,9 +181,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
-		
+		connect.close();
 	}
+	
 	private void populateHeld() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getHeldTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -213,8 +210,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
+	
 	private void populateMatch() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getMatchTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -223,7 +223,7 @@ public class Populator {
 				stmt.registerOutParameter(1, Types.INTEGER);
 				stmt.setString(2, row.getData(0));
 				stmt.setString(3, row.getData(1));
-				stmt.setString(3, row.getData(2));
+				stmt.setInt(4, Integer.parseInt(row.getData(2)));
 				
 				stmt.execute();
 				
@@ -240,9 +240,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
-		
+		connect.close();
 	}
+	
 	private void populateOrg() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getOrgTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -251,7 +253,7 @@ public class Populator {
 				stmt.registerOutParameter(1, Types.INTEGER);
 				stmt.setString(2, row.getData(0));
 				stmt.setString(3, row.getData(1));
-				stmt.setString(3, row.getData(2));
+				stmt.setString(4, row.getData(2));
 				
 				stmt.execute();
 				
@@ -268,8 +270,11 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
+	
 	private void populateParticipateIn() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getParticipateInTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
@@ -278,7 +283,7 @@ public class Populator {
 				stmt.registerOutParameter(1, Types.INTEGER);
 				stmt.setString(2, row.getData(0));
 				stmt.setString(3, row.getData(1));
-				stmt.setString(3, row.getData(2));
+				stmt.setString(4, row.getData(2));
 				
 				stmt.execute();
 				
@@ -295,18 +300,20 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
-		
+		connect.close();
 	}
+	
 	private void populatePlacedIn() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getPlacedInTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
 			try {
 				CallableStatement stmt = con.prepareCall("{? = call addPlacedIn(?, ?, ?)}");
 				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-				stmt.setString(3, row.getData(1));
-				stmt.setString(3, row.getData(2));
+				stmt.setString(2, row.getData(1));
+				stmt.setString(3, row.getData(0));
+				stmt.setString(4, row.getData(2));
 				
 				stmt.execute();
 				
@@ -323,16 +330,19 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
+	
 	private void populatePlayedOn() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getPlayedOnTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
 			try {
 				CallableStatement stmt = con.prepareCall("{? = call addPlayedOn(?, ?)}");
 				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-				stmt.setString(3, row.getData(1));
+				stmt.setString(2, row.getData(1));
+				stmt.setString(3, row.getData(0));
 				
 				stmt.execute();
 				
@@ -349,43 +359,19 @@ public class Populator {
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
-	private void populatePlayerRole() {
-Set<StringArrayWrapper> dataSet = dp.getPlayerRoleTableInfo();
-		
-		for(StringArrayWrapper row : dataSet) {
-			try {
-				CallableStatement stmt = con.prepareCall("{? = call addPlayerRole(?, ?)}");
-				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-				stmt.setString(3, row.getData(1));
-				
-				
-				stmt.execute();
-				
-				int retCode = stmt.getInt(1);
-				if (retCode == 0){
-					System.out.println("Succesfull add");
-				} else if (retCode == 1) {
-					System.out.println("PlayerRole already exists");
-				} else {
-					System.out.println("Unidentified return code");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				System.err.println("Call Failed for " + row.toString());
-			}
-		}
-	}
+	
 	private void populatePlaysFor() {
+		Connection con = connect.getConnection();
 		Set<StringArrayWrapper> dataSet = dp.getPlaysForTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
 			try {
-				CallableStatement stmt = con.prepareCall("{? = call addPlayersFor(?, ?)}");
+				CallableStatement stmt = con.prepareCall("{? = call addPlaysFor(?, ?)}");
 				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-				stmt.setString(3, row.getData(1));
+				stmt.setString(2, row.getData(1));
+				stmt.setString(3, row.getData(0));
 				
 				stmt.execute();
 				
@@ -402,68 +388,20 @@ Set<StringArrayWrapper> dataSet = dp.getPlayerRoleTableInfo();
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
-	private void populateRole() {
-		Set<StringArrayWrapper> dataSet = dp.getRoleTableInfo();
-		
-		for(StringArrayWrapper row : dataSet) {
-			try {
-				CallableStatement stmt = con.prepareCall("{? = call addRole(?)}");
-				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-
-				
-				stmt.execute();
-				
-				int retCode = stmt.getInt(1);
-				if (retCode == 0){
-					System.out.println("Succesfull add");
-				} else if (retCode == 1) {
-					System.out.println("Role already exists");
-				} else {
-					System.out.println("Unidentified return code");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				System.err.println("Call Failed for " + row.toString());
-			}
-		}
-	}
-	private void populateType() {
-		Set<StringArrayWrapper> dataSet = dp.getTypeTableInfo();
-		
-		for(StringArrayWrapper row : dataSet) {
-			try {
-				CallableStatement stmt = con.prepareCall("{? = call addType(?)}");
-				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-
-				stmt.execute();
-				
-				int retCode = stmt.getInt(1);
-				if (retCode == 0){
-					System.out.println("Succesfull add");
-				} else if (retCode == 1) {
-					System.out.println("Type already exists");
-				} else {
-					System.out.println("Unidentified return code");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				System.err.println("Call Failed for " + row.toString());
-			}
-		}
-	}
+	
 	private void populateUses() {
-Set<StringArrayWrapper> dataSet = dp.getUsesTableInfo();
+		Connection con = connect.getConnection();
+		Set<StringArrayWrapper> dataSet = dp.getUsesTableInfo();
 		
 		for(StringArrayWrapper row : dataSet) {
 			try {
 				CallableStatement stmt = con.prepareCall("{? = call addUses(?, ?, ?)}");
 				stmt.registerOutParameter(1, Types.INTEGER);
-				stmt.setString(2, row.getData(0));
-				stmt.setString(3, row.getData(1));
-				stmt.setString(3, row.getData(2));
+				stmt.setString(2, row.getData(1));
+				stmt.setString(3, row.getData(0));
+				stmt.setString(4, row.getData(2));
 				
 				stmt.execute();
 				
@@ -480,7 +418,6 @@ Set<StringArrayWrapper> dataSet = dp.getUsesTableInfo();
 				System.err.println("Call Failed for " + row.toString());
 			}
 		}
+		connect.close();
 	}
-	
-	
 }
