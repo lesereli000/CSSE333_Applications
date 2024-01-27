@@ -57,6 +57,7 @@ public class Login {
 			JOptionPane.showMessageDialog(null, "Login Error");
 			e.printStackTrace();
 		}
+		JOptionPane.showMessageDialog(null, "Login Error");
 		this.connect.close();
 		return false;
 	}
@@ -78,7 +79,10 @@ public class Login {
 			
 			int returnCode = cs.getInt(1);
 			connect.close();
-			return returnCode == 0;
+			if(returnCode == 1) {
+				JOptionPane.showMessageDialog(null, "Registration Successful. Please Log in.");
+				return true;
+			}
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Login Error");
 			e.printStackTrace();

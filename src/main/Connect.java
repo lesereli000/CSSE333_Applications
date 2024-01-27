@@ -12,7 +12,6 @@ public class Connect {
 
 	public Connect(String serverName, String dbName, String userName, String userPass) {
 		fullUrl = url.replace("${dbServer}", serverName).replace("${dbName}", dbName).replace("${user}", userName).replace("${pass}", userPass);
-		this.con = connect(fullUrl);
 	}
 	
 	public Connection getConnection() {
