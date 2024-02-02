@@ -14,12 +14,12 @@ public class Delete {
 		this.connect = connect;
 	}
 	
-	public void deleteEvent(String ID) {
+	public void deleteEvent(String event) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, event);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -35,16 +35,16 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlayer(String ID) {
+	public void deletePlayer(String player) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeletePlayer(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, player);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
-				System.out.println("Succesfull delete");
+				System.out.println("Succesful delete");
 			} else {
 				System.out.println("The Player does not exist");
 			}
@@ -56,12 +56,12 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteTeam(String ID) {
+	public void deleteTeam(String team) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteTeam(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, team);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -77,12 +77,12 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteGear(String ID) {
+	public void deleteGear(String gear) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteGear(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, gear);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -125,7 +125,7 @@ public class Delete {
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, event);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -146,7 +146,7 @@ public class Delete {
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, event);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -188,7 +188,7 @@ public class Delete {
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, player);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -209,7 +209,7 @@ public class Delete {
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, team);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -230,7 +230,7 @@ public class Delete {
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, player);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
@@ -251,7 +251,7 @@ public class Delete {
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, ID);
+			stmt.setString(2, player);
 			
 			int retCode = stmt.getInt(1);
 			if (retCode == 0){
