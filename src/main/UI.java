@@ -2,7 +2,6 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,7 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -84,7 +82,35 @@ public class UI {
 		frame.getContentPane().add(inputPanel);
 		frame.setVisible(true);
 	}
-	
+	private JPanel getButtonPanel(JFrame frame) {
+		JPanel btnPanel = new JPanel();
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+		inputPanel.setBounds(40, 40, 20, 20);
+
+
+		JButton mainButton = new JButton("Main");
+		JButton addButton = new JButton("Add");
+		JButton updateButton = new JButton("Update");
+		JButton deleteButton = new JButton("Delete");
+		btnPanel.add(mainButton);
+		btnPanel.add(addButton);
+		btnPanel.add(updateButton);
+		btnPanel.add(deleteButton);
+		deleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gotoPage(frame, "Delete");
+			}
+		});
+		mainButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gotoPage(frame, "Main");
+			}
+		});
+		return btnPanel;
+	}
 	public void mainPage() {
 		//JOptionPane.showMessageDialog(null, "Login Success. Page not implemented yet.");
 		// create the frame
@@ -93,23 +119,11 @@ public class UI {
 		frame.setSize(600,600);
 		
 		// create panels
-		JPanel btnPanel = new JPanel();
-		JPanel inputPanel = new JPanel();
-		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
-		inputPanel.setBounds(25, 25, 250, 250);
-		
-		// get frame ready to display
+		JPanel btnPanel = getButtonPanel(frame);
 		frame.getContentPane().add(BorderLayout.SOUTH, btnPanel);
-		frame.getContentPane().add(inputPanel);
+		// literally no idea what this is for and it obscures some of the buttons so it has been commented out until further evaluation
+		// frame.getContentPane().add(inputPanel);
 		frame.setVisible(true);
-		
-		// add buttons
-		JButton addButton = new JButton("Add");
-		JButton updateButton = new JButton("Update");
-		JButton deleteButton = new JButton("Delete");
-		btnPanel.add(addButton);
-		btnPanel.add(updateButton);
-		btnPanel.add(deleteButton);
 		
 		// add pull down menu
 		JPanel addPDpanel = new JPanel();
@@ -119,6 +133,7 @@ public class UI {
 		addLabel.setVisible(true);
 
         addPDpanel.add(addLabel);
+		addPDpanel.setLocation(100, 100);
         String[] choices = { "Team","Player", "CHOICE 3","CHOICE 4","CHOICE 5","CHOICE 6"};
         cb = new JComboBox<String>(choices);
         cb.setVisible(true);
@@ -126,23 +141,45 @@ public class UI {
 	    
 	    OKbtn = new JButton("OK");
 	    addPDpanel.add(OKbtn);
-	    
+
+		resultLabel = new JLabel();
+		addPDpanel.add(resultLabel);
 	    OKbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 displaySelectedChoice();
             }
         });
-	    
-	    resultLabel = new JLabel();
-	    addPDpanel.add(resultLabel);
-	    
 
 		
+	}
+	public void deletePage() {
+		JFrame frame = new JFrame("DeletePage");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(600,600);
+		frame.setVisible(true);
+		JPanel btnPanel = getButtonPanel(frame);
+		frame.getContentPane().add(BorderLayout.SOUTH, btnPanel);
 	}
 	private void displaySelectedChoice() {
         String selectedChoice = (String) cb.getSelectedItem();
         resultLabel.setText("Selected: " + selectedChoice);
     }
+	private void gotoPage(JFrame frame, String selectedChoice) {
+		switch (selectedChoice) {
+			case "Main": {
+				frame.dispose();
+				frame.setVisible(false);
+				mainPage();
+				break;
+			}
+			case "Delete": {
+				frame.dispose();
+				frame.setVisible(false);
+				deletePage();
+				break;
+			}
 
+		}
+	}
 }
