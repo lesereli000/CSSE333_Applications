@@ -2,7 +2,6 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 public class UI {
 	
@@ -166,6 +164,8 @@ public class UI {
 	}
 	
 	public void deletePage() {
+		Delete d = new Delete(connect);
+		
 		JFrame frame = new JFrame("Delete Page");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(600,600));
@@ -220,7 +220,94 @@ public class UI {
 		inputPanel.add(infoPanel2, BorderLayout.CENTER);
 	    
 	    JButton submit = new JButton("Submit");
-	    submit.setMaximumSize(new Dimension(300, 20));
+	    submit.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch(cb.getSelectedIndex()) {
+				
+					case 0: {
+						//Team
+						d.deleteTeam(info1.getText());
+						break;
+					}
+					
+					case 1: {
+						//Player
+						d.deletePlayer(info1.getText());
+						break;
+					}
+					
+					case 2: {
+						//Gear
+						d.deleteGear(info1.getText());
+						break;
+					}
+					
+					case 3: {
+						//Match
+						d.deleteMatch(info1.getText());
+						break;
+					}
+					
+					case 4: {
+						//Org
+						d.deleteOrg(info1.getText());
+						break;
+					}
+					
+					case 5: {
+						//Event
+						d.deleteEvent(info1.getText());
+						break;
+					}
+					
+					case 6: {
+						//Uses
+						d.deleteUses(info1.getText(), info2.getText());
+						break;
+					}
+					
+					case 7: {
+						//Has
+						d.deleteHas(info1.getText(), info2.getText());
+						break;
+					}
+					
+					case 8: {
+						//Held
+						d.deleteHeld(info1.getText(), info2.getText());
+						break;
+					}
+					
+					case 9: {
+						//ParticipatesIn
+						d.deleteParticipateIn(info1.getText(), info2.getText());
+						break;
+					}
+					
+					case 10: {
+						//PlacedIn
+						d.deletePlacedIn(info1.getText(), info2.getText());
+						break;
+					}
+					
+					case 11: {
+						//PlayedIn
+						d.deletePlayedOn(info1.getText(), info2.getText());
+						break;
+					}
+					
+					case 12: {
+						//PlaysFor
+						d.deletePlaysFor(info1.getText(), info2.getText());
+						break;
+					}
+				
+				}
+			}
+	    });
+	    
 	    inputPanel.add(submit, BorderLayout.SOUTH);
 	    frame.add(inputPanel, BorderLayout.CENTER);
 	    
@@ -333,10 +420,12 @@ public class UI {
 	    frame.pack();
 		frame.setVisible(true);
 	}
+	
 	private void displaySelectedChoice() {
         String selectedChoice = (String) cb.getSelectedItem();
         resultLabel.setText("Selected: " + selectedChoice);
     }
+	
 	private void gotoPage(JFrame frame, String selectedChoice) {
 		switch (selectedChoice) {
 			case "Main": {

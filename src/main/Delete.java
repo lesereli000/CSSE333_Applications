@@ -119,7 +119,7 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteHeld(String ID) {
+	public void deleteHeld(String event, String org) {
 
 		Connection con = connect.getConnection();
 		try {
@@ -141,7 +141,7 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteHas(String ID) {
+	public void deleteHas(String event, String match) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
@@ -183,7 +183,7 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteParticipateIn(String ID) {
+	public void deleteParticipateIn(String player, String event) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
@@ -204,7 +204,7 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlacedIn(String ID) {
+	public void deletePlacedIn(String team, String event) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
@@ -225,7 +225,7 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlayedOn(String ID) {
+	public void deletePlayedOn(String player, String match) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
@@ -246,7 +246,7 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlaysFor(String ID) {
+	public void deletePlaysFor(String player, String team) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
