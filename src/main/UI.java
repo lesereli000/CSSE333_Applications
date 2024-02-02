@@ -2,6 +2,8 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class UI {
 	
@@ -23,9 +26,17 @@ public class UI {
     private JButton OKbtn;
     private JLabel resultLabel;
 
-	public UI(Connect connect) {
+    public UI(Connect connect) {
+		new UI(connect, true);
+	}
+    
+	public UI(Connect connect, boolean useLogin) {
 		this.connect = connect;
-		loginPage();
+		if(useLogin) {
+			loginPage();
+		} else {
+			mainPage();
+		}
 	}
 	
 	public void loginPage() {
@@ -153,13 +164,174 @@ public class UI {
 
 		
 	}
+	
 	public void deletePage() {
-		JFrame frame = new JFrame("DeletePage");
+		JFrame frame = new JFrame("Delete Page");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,600);
-		frame.setVisible(true);
+		frame.setMinimumSize(new Dimension(600,600));
+//		frame.setSize(600, 600);
 		JPanel btnPanel = getButtonPanel(frame);
-		frame.getContentPane().add(BorderLayout.SOUTH, btnPanel);
+		frame.add(BorderLayout.SOUTH, btnPanel);
+		
+		// add pull down menu
+		JPanel addPDpanel = new JPanel();
+	    frame.add(BorderLayout.NORTH, addPDpanel);
+		JLabel addLabel = new JLabel("Select something to delete: ");
+		addLabel.setBounds(20, 10, 20, 20);
+		addLabel.setVisible(true);
+
+        addPDpanel.add(addLabel);
+		addPDpanel.setLocation(100, 100);
+        String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
+        					"Event", "Player Uses Gear", "Event Has a Match", 
+        					"Event Held by Organization", "Player in Event", 
+        					"Team Placed In Event", "Player Played in a Match", 
+        					"Player Plays For a Team"};
+        cb = new JComboBox<String>(choices);
+        cb.setVisible(true);
+	    addPDpanel.add(cb);
+	    
+	    JPanel inputPanel = new JPanel();
+	    inputPanel.setMaximumSize(new Dimension(500, 800)); // Increase the height
+	    inputPanel.setLayout(new BorderLayout());
+	    inputPanel.setVisible(false);
+		
+		JPanel infoPanel1 = new JPanel();
+		infoPanel1.setLayout(new GridBagLayout()); // Use FlowLayout
+		JLabel infoLabel1 = new JLabel("Team Name: ");
+		infoPanel1.add(infoLabel1);
+
+		JTextField info1 = new JTextField();
+		info1.setPreferredSize(new Dimension(500, 25)); // Set preferred size
+		infoPanel1.add(info1);
+
+		inputPanel.add(infoPanel1, BorderLayout.NORTH);
+	    
+		JPanel infoPanel2 = new JPanel();
+		infoPanel2.setLayout(new GridBagLayout()); // Use FlowLayout
+		JLabel infoLabel2 = new JLabel("Team Name: ");
+		infoPanel2.add(infoLabel2);
+
+		JTextField info2 = new JTextField();
+		info2.setPreferredSize(new Dimension(500, 25)); // Set preferred size
+		infoPanel2.add(info2);
+
+		infoPanel2.setVisible(false);
+		inputPanel.add(infoPanel2, BorderLayout.CENTER);
+	    
+	    JButton submit = new JButton("Submit");
+	    submit.setMaximumSize(new Dimension(300, 20));
+	    inputPanel.add(submit, BorderLayout.SOUTH);
+	    frame.add(inputPanel, BorderLayout.CENTER);
+	    
+	    OKbtn = new JButton("OK");
+	    OKbtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch(cb.getSelectedIndex()) {
+				
+					case 0: {
+						//Team
+						infoLabel1.setText("Team Name: ");
+						break;
+					}
+					
+					case 1: {
+						//Player
+						infoLabel1.setText("Player Name: ");
+						break;
+					}
+					
+					case 2: {
+						//Gear
+						infoLabel1.setText("Gear Model: ");
+						break;
+					}
+					
+					case 3: {
+						//Match
+						infoLabel1.setText("Match Time: ");
+						break;
+					}
+					
+					case 4: {
+						//Org
+						infoLabel1.setText("Org Name: ");
+						break;
+					}
+					
+					case 5: {
+						//Event
+						infoLabel1.setText("Event Name: ");
+						break;
+					}
+					
+					case 6: {
+						//Uses
+						infoLabel1.setText("Player Name: ");
+						infoLabel2.setText("Gear Model: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+					
+					case 7: {
+						//Has
+						infoLabel1.setText("Event Name: ");
+						infoLabel2.setText("Match Time: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+					
+					case 8: {
+						//Held
+						infoLabel1.setText("Event Name: ");
+						infoLabel2.setText("Org Name: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+					
+					case 9: {
+						//ParticipatesIn
+						infoLabel1.setText("Player Name: ");
+						infoLabel2.setText("Event Name: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+					
+					case 10: {
+						//PlacedIn
+						infoLabel1.setText("Team Name: ");
+						infoLabel2.setText("Event Name: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+					
+					case 11: {
+						//PlayedIn
+						infoLabel1.setText("Player Name: ");
+						infoLabel2.setText("Match Time: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+					
+					case 12: {
+						//PlaysFor
+						infoLabel1.setText("Player Name: ");
+						infoLabel2.setText("Team Name: ");
+						infoPanel2.setVisible(true);
+						break;
+					}
+				
+				}
+				inputPanel.setVisible(true);
+			}
+	    	
+	    });
+	    addPDpanel.add(OKbtn);
+
+	    frame.pack();
+		frame.setVisible(true);
 	}
 	private void displaySelectedChoice() {
         String selectedChoice = (String) cb.getSelectedItem();

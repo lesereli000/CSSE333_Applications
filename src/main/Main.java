@@ -37,7 +37,7 @@ public class Main {
 //		p.populateAll();
 		
 		@SuppressWarnings("unused")
-		UI ui = new UI(connect);
+		UI ui = new UI(connect, false);
 		
 	}
 }
