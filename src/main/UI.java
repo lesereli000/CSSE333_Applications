@@ -105,6 +105,16 @@ public class UI {
 		btnPanel.add(addButton);
 		btnPanel.add(updateButton);
 		btnPanel.add(deleteButton);
+		
+		
+		addButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gotoPage(frame, "Add");
+				
+				//TODO: call add functions
+			}
+		});
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -305,6 +315,41 @@ public class UI {
         String selectedChoice = (String) cb.getSelectedItem();
         resultLabel.setText("Selected: " + selectedChoice);
     }
+	
+	
+	
+	
+	public void addPage() {
+		Add a = new Add(connect);
+		
+		// set up frame and add standard buttons
+		JFrame frame = new JFrame("Add Page");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setMinimumSize(new Dimension(600,600));
+		JPanel btnPanel = getButtonPanel(frame);
+		frame.add(BorderLayout.SOUTH, btnPanel);
+		
+		// set up pull down menu panel and add label
+		JPanel addPDpanel = new JPanel();
+	    frame.add(BorderLayout.NORTH, addPDpanel);
+		JLabel addLabel = new JLabel("Select something to add: ");
+		addLabel.setBounds(20, 10, 20, 20);
+		addLabel.setVisible(true);
+		addPDpanel.add(addLabel);
+		addPDpanel.setLocation(100, 100);
+
+		// add pull down menu
+        String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
+        					"Event", "Player Uses Gear", "Event Has a Match", 
+        					"Event Held by Organization", "Player in Event", 
+        					"Team Placed In Event", "Player Played in a Match", 
+        					"Player Plays For a Team"};
+        cb = new JComboBox<String>(choices);
+        cb.setVisible(true);
+	    addPDpanel.add(cb);
+	    frame.pack();
+		frame.setVisible(true);
+	}
 	
 	public void deletePage() {
 		Delete d = new Delete(connect);
@@ -571,6 +616,12 @@ public class UI {
 				frame.dispose();
 				frame.setVisible(false);
 				mainPage();
+				break;
+			}
+			case "Add": {
+				frame.dispose();
+				frame.setVisible(false);
+				addPage();
 				break;
 			}
 			case "Delete": {

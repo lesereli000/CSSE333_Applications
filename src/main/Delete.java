@@ -98,7 +98,7 @@ public class Delete {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println("Call Failed for deleteEvent");
+			System.err.println("Call Failed for deleteGear");
 		}
 		
 		connect.close();
@@ -121,7 +121,7 @@ public class Delete {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.err.println("Call Failed for deleteEvent");
+			System.err.println("Call Failed for deleteMatch");
 		}
 		
 		connect.close();
