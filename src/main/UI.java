@@ -164,6 +164,9 @@ public class UI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 displaySelectedChoice(resultLabel);
+                frame.remove(contentPanel);
+                JPanel contentPanel = new JPanel();
+                frame.add(contentPanel);
                 readTable(cb.getSelectedIndex(), contentPanel);
             }
         });
@@ -189,103 +192,97 @@ public class UI {
 			
 			case 1: {
 				//Player
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", "", "", "", "", ""};
+				Object[][] data = select.selectPlayer("", "", "", "", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 2: {
 				//Gear
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", "", "", ""};
+				Object[][] data = select.selectGear("", "", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 3: {
 				//Match
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", "", ""};
+				Object[][] data = select.selectMatch("", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 4: {
 				//Org
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", "", ""};
+				Object[][] data = select.selectMatchOrganization("", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 5: {
 				//Event
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", "", "", ""};
+				Object[][] data = select.selectEvent("", "", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 6: {
 				//Uses
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				// TODO: make table scrollable
+				Object[] columnNames = {"Player", "Gear", "Since"};
+				Object[][] data = select.selectUses("", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 7: {
 				//Has
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", ""};
+				Object[][] data = select.selectHas("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 8: {
 				//Held
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", ""};
+				Object[][] data = select.selectHeld("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 9: {
 				//ParticipatesIn
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", ""};
+				Object[][] data = select.selectParticipateIn("", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 10: {
 				//PlacedIn
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				Object[] columnNames = {"", "", ""};
+				Object[][] data = select.selectPlacedIn("", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 11: {
-				//PlayedIn
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
+				//PlayedOn
+				Object[] columnNames = {"", ""};
+				Object[][] data = select.selectPlayedOn("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 12: {
 				//PlaysFor
-				Object[] columnNames = {};
-				Object[][] data = select.selectTeam(null, null, null, null);
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			default: {
-				Object[] columnNames = {};
-				Object[][] data = {};
+				Object[] columnNames = {"", ""};
+				Object[][] data = select.selectPlaysFor("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
