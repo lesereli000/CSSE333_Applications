@@ -12,12 +12,12 @@ public class Delete {
 		this.connect = connect;
 	}
 	
-	public void deleteEvent(String event) {
+	public void deleteEvent(int event) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteEvent(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, event);
+			stmt.setInt(2, event);
 			
 			stmt.execute();
 			
@@ -35,12 +35,12 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlayer(String player) {
+	public void deletePlayer(int player) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeletePlayer(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, player);
+			stmt.setInt(2, player);
 			
 			stmt.execute();
 			
@@ -58,12 +58,12 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteTeam(String team) {
+	public void deleteTeam(int teamID) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteTeam(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, team);
+			stmt.setInt(2, teamID);
 			
 			stmt.execute();
 			
@@ -104,12 +104,12 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteMatch(String match) {
+	public void deleteMatch(int match) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteMatch(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, match);
+			stmt.setInt(2, match);
 			
 			stmt.execute();
 			
@@ -127,14 +127,14 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteHeld(String event, String org) {
+	public void deleteHeld(int event, int org) {
 
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteHeld(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, event);
-			stmt.setString(3, org);
+			stmt.setInt(2, event);
+			stmt.setInt(3, org);
 			
 			stmt.execute();
 			
@@ -152,13 +152,13 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteHas(String event, String match) {
+	public void deleteHas(int eventID, int matchID) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteHas(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, event);
-			stmt.setString(3, match);
+			stmt.setInt(2, eventID);
+			stmt.setInt(3, matchID);
 			
 			stmt.execute();
 			
@@ -176,12 +176,12 @@ public class Delete {
 		connect.close();
 	}
 
-	public void deleteOrg(String org) {
+	public void deleteOrg(int org) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteMatchOrganization(?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, org);
+			stmt.setInt(2, org);
 			
 			stmt.execute();
 			
@@ -199,13 +199,13 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteParticipateIn(String player, String match) {
+	public void deleteParticipateIn(int player, int match) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteParticipateIn(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, player);
-			stmt.setString(3, match);
+			stmt.setInt(2, player);
+			stmt.setInt(3, match);
 			
 			stmt.execute();
 			
@@ -223,13 +223,13 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlacedIn(String team, String event) {
+	public void deletePlacedIn(int team, int event) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeletePlacedIn(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, team);
-			stmt.setString(3, event);
+			stmt.setInt(2, team);
+			stmt.setInt(3, event);
 			
 			stmt.execute();
 			
@@ -247,13 +247,13 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlayedOn(String team, String match) {
+	public void deletePlayedOn(int team, int match) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeletePlayedOn(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, team);
-			stmt.setString(3, match);
+			stmt.setInt(2, team);
+			stmt.setInt(3, match);
 			
 			stmt.execute();
 			
@@ -271,13 +271,13 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deletePlaysFor(String player, String team) {
+	public void deletePlaysFor(int player, int team) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeletePlaysFor(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, player);
-			stmt.setString(3, team);
+			stmt.setInt(2, player);
+			stmt.setInt(3, team);
 			
 			stmt.execute();
 			
@@ -295,12 +295,12 @@ public class Delete {
 		connect.close();
 	}
 	
-	public void deleteUses(String player, String Gear) {
+	public void deleteUses(int player, String Gear) {
 		Connection con = connect.getConnection();
 		try {
 			CallableStatement stmt = con.prepareCall("{? = call DeleteUses(?, ?)}");
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.setString(2, player);
+			stmt.setInt(2, player);
 			stmt.setString(3,  Gear);
 			
 			stmt.execute();

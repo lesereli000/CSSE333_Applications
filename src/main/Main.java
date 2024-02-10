@@ -33,8 +33,8 @@ public class Main {
 		Connect connect = new Connect(conInfo[0], conInfo[1], conInfo[2], conInfo[3]);
 		
 		//call the population scripts
-//		Populator p = new Populator(connect);
-//		p.populateAll();
+		Populator p = new Populator(connect);
+		p.populateAll();
 		
 		@SuppressWarnings("unused")
 		UI ui = new UI(connect, true);

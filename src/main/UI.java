@@ -2,9 +2,10 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,21 +23,63 @@ public class UI {
 	// pull down for "add" 
 	private JComboBox<String> cb;
     private JButton OKbtn;
-
+    
+    private int selectedIndex;    
+    
     public UI(Connect connect) {
 		new UI(connect, true);
 	}
     
 	public UI(Connect connect, boolean useLogin) {
 		this.connect = connect;
+		selectedIndex = 0;
 		if(useLogin) {
-			loginPage();
+			gotoPage(new JFrame(), "Login");
 		} else {
-			mainPage();
+			gotoPage(new JFrame(), "Main");
 		}
 	}
 	
-	public void loginPage() {
+	private void gotoPage(JFrame frame, String newPage) {
+		switch (newPage) {
+			case "Main": {
+				frame.dispose();
+				frame.setVisible(false);
+				mainPage();
+				break;
+			}
+			
+			case "Add": {
+				frame.dispose();
+				frame.setVisible(false);
+				addPage();
+				break;
+			}
+			
+			case "Delete": {
+				frame.dispose();
+				frame.setVisible(false);
+				deletePage();
+				break;
+			}
+			
+			case "Update": {
+				frame.dispose();
+				frame.setVisible(false);
+				updatePage();
+				break;
+			}
+			
+			case "Login": {
+				frame.dispose();
+				frame.setVisible(false);
+				loginPage();
+				break;
+			}
+		}
+	}
+	
+	private void loginPage() {
 		Login log = new Login(connect);
 		
 		// create the frame
@@ -73,8 +116,7 @@ public class UI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(log.login(user.getText(), pass.getText())) {
-					frame.dispose();
-					mainPage();
+					gotoPage(frame, "Main");
 				}
 			}
 		});
@@ -97,7 +139,6 @@ public class UI {
 		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
 		inputPanel.setBounds(40, 40, 20, 20);
 
-
 		JButton mainButton = new JButton("Main");
 		JButton addButton = new JButton("Add");
 		JButton updateButton = new JButton("Update");
@@ -107,33 +148,44 @@ public class UI {
 		btnPanel.add(updateButton);
 		btnPanel.add(deleteButton);
 		
-		
 		addButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gotoPage(frame, "Add");
-				
-				//TODO: call add functions
 			}
 		});
+		
+		updateButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gotoPage(frame, "Update");
+			}
+		});
+		
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gotoPage(frame, "Delete");
-				
-				//TODO: call delete functions
 			}
 		});
+		
 		mainButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gotoPage(frame, "Main");
 			}
 		});
+		
 		return btnPanel;
 	}
 	
-	public void mainPage() {
+	private void displaySelectedChoice(JLabel resultLabel) {
+        String selectedChoice = (String) cb.getSelectedItem();
+        resultLabel.setText("Selected: " + selectedChoice);
+        selectedIndex = cb.getSelectedIndex();
+    }
+	
+	private void mainPage() {
 		// create the frame
 		JFrame frame = new JFrame("Welcome to the EsportDataTracking App!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -155,22 +207,23 @@ public class UI {
 		addPDpanel.setLocation(100, 100);
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
 							"Event", "Player Uses Gear", "Event Has a Match", 
-							"Event Held by Organization", "Player in Event", 
+							"Event Held by Organization", "Team in Match", 
 							"Team Placed In Event", "Player Played in a Match", 
 							"Player Plays For a Team"};
         cb = new JComboBox<String>(choices);
+        cb.setSelectedIndex(selectedIndex);
         cb.setVisible(true);
 	    addPDpanel.add(cb);
+	    
+	    JPanel contentPanel = new JPanel();
+		readTable(cb.getSelectedIndex(), contentPanel);
+		frame.add(contentPanel, BorderLayout.CENTER);
 	    
 	    OKbtn = new JButton("OK");
 	    addPDpanel.add(OKbtn);
 
 		JLabel resultLabel = new JLabel("");
 		addPDpanel.add(resultLabel);
-		
-		JPanel contentPanel = new JPanel();
-		readTable(cb.getSelectedIndex(), contentPanel);
-		frame.add(contentPanel, BorderLayout.CENTER);
 		
 	    OKbtn.addActionListener(new ActionListener() {
             @Override
@@ -195,9 +248,9 @@ public class UI {
 				//Team
 				Object[] columnNames = {"ID", "Team Name", "Sponsor", "Date Founded"};
 				Object[][] data = select.selectTeam("", "", "", "");
-				if(data == null) {
-					break;
-				}
+//				if(data == null) {
+//					break;
+//				}
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
@@ -302,9 +355,8 @@ public class UI {
 		}
 		
 		if(dataTable == null) {
-			// TODO: Display no data message
-			Object[] columnNames = {};
-			Object[][] data = {};
+			Object[] columnNames = {"Error"};
+			Object[][] data = {{"No Data Available"}};
 			dataTable = new JTable(data, columnNames);
 		}
 		
@@ -312,143 +364,7 @@ public class UI {
 		contentPanel.add(dataTable);
 	}
 
-	private void deleteTable(int selectedItem, JPanel contentPanel) {
-		
-		Select select = new Select(connect);
-		JTable dataTable = null;
-		
-		switch(selectedItem) {
-		
-			case 0: {
-				//Team
-				Object[] columnNames = {"ID", "Team Name", "Sponsor", "Date Founded"};
-				Object[][] data = select.selectTeam("", "", "", "");
-				if(data == null) {
-					break;
-				}
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 1: {
-				//Player
-				Object[] columnNames = {"", "", "", "", "", "", ""};
-				Object[][] data = select.selectPlayer("", "", "", "", "", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 2: {
-				//Gear
-				Object[] columnNames = {"", "", "", "", ""};
-				Object[][] data = select.selectGear("", "", "", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 3: {
-				//Match
-				Object[] columnNames = {"", "", "", ""};
-				Object[][] data = select.selectMatch("", "", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 4: {
-				//Org
-				Object[] columnNames = {"", "", "", ""};
-				Object[][] data = select.selectMatchOrganization("", "", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 5: {
-				//Event
-				Object[] columnNames = {"", "", "", "", ""};
-				Object[][] data = select.selectEvent("", "", "", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 6: {
-				//Uses
-				// TODO: make table scrollable
-				Object[] columnNames = {"Player", "Gear", "Since"};
-				Object[][] data = select.selectUses("", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 7: {
-				//Has
-				Object[] columnNames = {"", ""};
-				Object[][] data = select.selectHas("", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 8: {
-				//Held
-				Object[] columnNames = {"", ""};
-				Object[][] data = select.selectHeld("", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 9: {
-				//ParticipatesIn
-				Object[] columnNames = {"", "", ""};
-				Object[][] data = select.selectParticipateIn("", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 10: {
-				//PlacedIn
-				Object[] columnNames = {"", "", ""};
-				Object[][] data = select.selectPlacedIn("", "", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 11: {
-				//PlayedOn
-				Object[] columnNames = {"", ""};
-				Object[][] data = select.selectPlayedOn("", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-			
-			case 12: {
-				//PlaysFor
-				Object[] columnNames = {"", ""};
-				Object[][] data = select.selectPlaysFor("", "");
-				dataTable = new JTable(data, columnNames);
-				break;
-			}
-		
-		}
-		
-		if(dataTable == null) {
-			// TODO: Display no data message
-			Object[] columnNames = {};
-			Object[][] data = {};
-			dataTable = new JTable(data, columnNames);
-		}
-		
-		dataTable.setEnabled(false);
-		contentPanel.add(dataTable);
-	}
-	
-	private void displaySelectedChoice(JLabel resultLabel) {
-        String selectedChoice = (String) cb.getSelectedItem();
-        resultLabel.setText("Selected: " + selectedChoice);
-    }
-	
-	
-	
-	
-	public void addPage() {
+	private void addPage() {
 		Add a = new Add(connect);
 		
 		// set up frame and add standard buttons
@@ -470,17 +386,40 @@ public class UI {
 		// add pull down menu
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
         					"Event", "Player Uses Gear", "Event Has a Match", 
-        					"Event Held by Organization", "Player in Event", 
+        					"Event Held by Organization", "Team in Match", 
         					"Team Placed In Event", "Player Played in a Match", 
         					"Player Plays For a Team"};
         cb = new JComboBox<String>(choices);
+        cb.setSelectedIndex(selectedIndex);
         cb.setVisible(true);
 	    addPDpanel.add(cb);
+	    
+	    OKbtn = new JButton("OK");
+	    addPDpanel.add(OKbtn);
+
+		JLabel resultLabel = new JLabel("");
+		addPDpanel.add(resultLabel);
+		
+	    OKbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displaySelectedChoice(resultLabel);
+                // TODO: Code for what to do when table is selected
+            }
+        });
+	    
+	    // TODO: Code for add operation UI
+	    
 	    frame.pack();
 		frame.setVisible(true);
 	}
 	
-	public void deletePage() {
+	private void set (JTable pointer, JTable newTable) {
+		pointer = newTable;
+	}
+	
+	private void deletePage() {
+		
 		Delete d = new Delete(connect);
 		
 		// set up frame and add standard buttons
@@ -502,264 +441,405 @@ public class UI {
 		// add pull down menu
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
         					"Event", "Player Uses Gear", "Event Has a Match", 
-        					"Event Held by Organization", "Player in Event", 
+        					"Event Held by Organization", "Team in Match", 
         					"Team Placed In Event", "Player Played in a Match", 
         					"Player Plays For a Team"};
         cb = new JComboBox<String>(choices);
+        cb.setSelectedIndex(selectedIndex);
         cb.setVisible(true);
 	    addPDpanel.add(cb);
 	    
-	    JPanel inputPanel = new JPanel();
-	    inputPanel.setMaximumSize(new Dimension(500, 800));
-	    inputPanel.setLayout(new BorderLayout());
-	    inputPanel.setVisible(false);
-		
-		JPanel infoPanel1 = new JPanel();
-		infoPanel1.setLayout(new GridBagLayout());
-		JLabel infoLabel1 = new JLabel("Team Name: ");
-		infoPanel1.add(infoLabel1);
-
-		JTextField info1 = new JTextField();
-		info1.setPreferredSize(new Dimension(500, 25));
-		infoPanel1.add(info1);
-
-		inputPanel.add(infoPanel1, BorderLayout.NORTH);
+	    JPanel contentPanel = new JPanel();
+		JTable dataTable = deleteTable(cb.getSelectedIndex(), contentPanel);
+		frame.add(contentPanel, BorderLayout.CENTER);
 	    
-		JPanel infoPanel2 = new JPanel();
-		infoPanel2.setLayout(new GridBagLayout());
-		JLabel infoLabel2 = new JLabel("Team Name: ");
-		infoPanel2.add(infoLabel2);
+	    OKbtn = new JButton("OK");
+	    addPDpanel.add(OKbtn);
 
-		JTextField info2 = new JTextField();
-		info2.setPreferredSize(new Dimension(500, 25));
-		infoPanel2.add(info2);
+		JLabel resultLabel = new JLabel("");
+		addPDpanel.add(resultLabel);
+		
+	    OKbtn.addActionListener(new ActionListener(){
 
-		infoPanel2.setVisible(false);
-		inputPanel.add(infoPanel2, BorderLayout.CENTER);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				displaySelectedChoice(resultLabel);
+                contentPanel.getComponent(0).setEnabled(false);
+                contentPanel.getComponent(0).setVisible(false);
+                contentPanel.removeAll();
+                set(dataTable, deleteTable(cb.getSelectedIndex(), contentPanel));
+                
+			}
+	    });
+	    addPDpanel.add(OKbtn);
 	    
 	    JButton submit = new JButton("Submit");
 	    submit.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				JTable dataTable = ((JTable) contentPanel.getComponent(0));
+				
+				// call delete code
 				switch(cb.getSelectedIndex()) {
 				
 					case 0: {
-						//Team
-						d.deleteTeam(info1.getText());
+						// Team
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteTeam((int) id);
+						}
 						break;
 					}
 					
 					case 1: {
-						//Player
-						d.deletePlayer(info1.getText());
+						// Player
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deletePlayer((int) id);
+						}
 						break;
 					}
 					
 					case 2: {
-						//Gear
-						d.deleteGear(info1.getText());
+						// Gear
+						for(Object model : getSingleIDRows(dataTable)) {
+							d.deleteGear((String) model);
+						}
 						break;
 					}
 					
 					case 3: {
-						//Match
-						d.deleteMatch(info1.getText());
+						// Match
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteMatch((int) id);
+						}
 						break;
 					}
 					
 					case 4: {
-						//Org
-						d.deleteOrg(info1.getText());
+						// Org
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteOrg((int) id);
+						}
 						break;
 					}
 					
 					case 5: {
-						//Event
-						d.deleteEvent(info1.getText());
+						// Event
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteEvent((int) id);
+						}
 						break;
 					}
 					
 					case 6: {
-						//Uses
-						d.deleteUses(info1.getText(), info2.getText());
+						// Uses
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteUses((int) i[0], (String) i[1]);
+						}
 						break;
 					}
 					
 					case 7: {
-						//Has
-						d.deleteHas(info1.getText(), info2.getText());
+						// Has
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteHas((int) i[0], (int) i[1]);
+						}
 						break;
 					}
 					
 					case 8: {
-						//Held
-						d.deleteHeld(info1.getText(), info2.getText());
+						// Held
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteHeld((int) i[0], (int) i[1]);
+						}
 						break;
 					}
 					
 					case 9: {
-						//ParticipatesIn
-						d.deleteParticipateIn(info1.getText(), info2.getText());
+						// PlayedOn
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deletePlayedOn((int) i[0], (int) i[1]);
+						}
 						break;
 					}
 					
 					case 10: {
-						//PlacedIn
-						d.deletePlacedIn(info1.getText(), info2.getText());
+						// PlacedIn
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deletePlacedIn((int) i[0], (int) i[1]);
+						}
 						break;
 					}
 					
 					case 11: {
-						//PlayedIn
-						d.deletePlayedOn(info1.getText(), info2.getText());
+						// ParticipateIn
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteParticipateIn((int) i[0], (int) i[1]);
+						}
 						break;
 					}
 					
 					case 12: {
-						//PlaysFor
-						d.deletePlaysFor(info1.getText(), info2.getText());
+						// PlaysFor
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deletePlaysFor((int) i[0], (int) i[1]);
+						}
 						break;
 					}
 				
 				}
+				
+				// refresh table output
+				displaySelectedChoice(resultLabel);
+                contentPanel.getComponent(0).setEnabled(false);
+                contentPanel.getComponent(0).setVisible(false);
+                contentPanel.removeAll();
+                set(dataTable, deleteTable(cb.getSelectedIndex(), contentPanel));
+				
 			}
+			
 	    });
 	    
-	    inputPanel.add(submit, BorderLayout.SOUTH);
-	    frame.add(inputPanel, BorderLayout.CENTER);
-	    
-	    OKbtn = new JButton("OK");
-	    OKbtn.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				switch(cb.getSelectedIndex()) {
-				
-					case 0: {
-						//Team
-						infoLabel1.setText("Team Name: ");
-						break;
-					}
-					
-					case 1: {
-						//Player
-						infoLabel1.setText("Player Name: ");
-						break;
-					}
-					
-					case 2: {
-						//Gear
-						infoLabel1.setText("Gear Model: ");
-						break;
-					}
-					
-					case 3: {
-						//Match
-						infoLabel1.setText("Match Time: ");
-						break;
-					}
-					
-					case 4: {
-						//Org
-						infoLabel1.setText("Org Name: ");
-						break;
-					}
-					
-					case 5: {
-						//Event
-						infoLabel1.setText("Event Name: ");
-						break;
-					}
-					
-					case 6: {
-						//Uses
-						infoLabel1.setText("Player Name: ");
-						infoLabel2.setText("Gear Model: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-					
-					case 7: {
-						//Has
-						infoLabel1.setText("Event Name: ");
-						infoLabel2.setText("Match Time: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-					
-					case 8: {
-						//Held
-						infoLabel1.setText("Event Name: ");
-						infoLabel2.setText("Org Name: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-					
-					case 9: {
-						//ParticipatesIn
-						infoLabel1.setText("Player Name: ");
-						infoLabel2.setText("Event Name: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-					
-					case 10: {
-						//PlacedIn
-						infoLabel1.setText("Team Name: ");
-						infoLabel2.setText("Event Name: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-					
-					case 11: {
-						//PlayedIn
-						infoLabel1.setText("Player Name: ");
-						infoLabel2.setText("Match Time: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-					
-					case 12: {
-						//PlaysFor
-						infoLabel1.setText("Player Name: ");
-						infoLabel2.setText("Team Name: ");
-						infoPanel2.setVisible(true);
-						break;
-					}
-				
-				}
-				inputPanel.setVisible(true);
-			}
-	    	
-	    });
-	    addPDpanel.add(OKbtn);
+	    btnPanel.add(submit, BorderLayout.NORTH);
 
 	    frame.pack();
 		frame.setVisible(true);
 	}
 	
-	private void gotoPage(JFrame frame, String selectedChoice) {
-		switch (selectedChoice) {
-			case "Main": {
-				frame.dispose();
-				frame.setVisible(false);
-				mainPage();
-				break;
-			}
-			case "Add": {
-				frame.dispose();
-				frame.setVisible(false);
-				addPage();
-				break;
-			}
-			case "Delete": {
-				frame.dispose();
-				frame.setVisible(false);
-				deletePage();
-				break;
-			}
+	private List<Object> getSingleIDRows(JTable dataTable){
+		List<Object> checkedRowIDs = new ArrayList<Object>();
+		
+		for (int i = 0; i < dataTable.getRowCount(); i++) {
 
+			if((boolean) dataTable.getValueAt(i, 0)) {
+				checkedRowIDs.add(dataTable.getValueAt(i, 1));
+			}
+			
+	     }
+		
+		return checkedRowIDs;
+	}
+	
+	private List<Object[]> getDoubleIDRows(JTable dataTable){
+		List<Object[]> checkedRowIDs = new ArrayList<Object[]>();
+		
+		for (int i = 0; i < dataTable.getRowCount(); i++) {
+
+			if((boolean) dataTable.getValueAt(i, 0)) {
+				checkedRowIDs.add(new Object[] {dataTable.getValueAt(i, 1), dataTable.getValueAt(i, 2)});
+			}
+			
+	     }
+		
+		return checkedRowIDs;
+	}
+	
+	@SuppressWarnings("serial")
+	private JTable deleteTable(int selectedItem, JPanel contentPanel) {
+		
+		Select select = new Select(connect);
+		JTable dataTable = null;
+		
+		Object[][] data = null;
+		Object[] columnNames = null;
+		
+		switch(selectedItem) {
+		
+			case 0: {
+				//Team
+				Object[] specificColumns = {"", "ID", "Team Name", "Sponsor", "Date Founded"};
+				data = select.selectTeam("", "", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 1: {
+				//Player
+				Object[] specificColumns = {"", "", "", "", "", "", "", ""};
+				data = select.selectPlayer("", "", "", "", "", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 2: {
+				//Gear
+				Object[] specificColumns = {"", "", "", "", "", ""};
+				data = select.selectGear("", "", "", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 3: {
+				//Match
+				Object[] specificColumns = {"", "", "", "", ""};
+				data = select.selectMatch("", "", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 4: {
+				//Org
+				Object[] specificColumns = {"", "", "", "", ""};
+				data = select.selectMatchOrganization("", "", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 5: {
+				//Event
+				Object[] specificColumns = {"", "", "", "", "", ""};
+				data = select.selectEvent("", "", "", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 6: {
+				//Uses
+				// TODO: make table scrollable
+				Object[] specificColumns = {"", "Player", "Gear", "Since"};
+				data = select.selectUses("", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 7: {
+				//Has
+				Object[] specificColumns = {"", "", ""};
+				data = select.selectHas("", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 8: {
+				//Held
+				Object[] specificColumns = {"", "", ""};
+				data = select.selectHeld("", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 9: {
+				//ParticipatesIn
+				Object[] specificColumns = {"", "", "", ""};
+				data = select.selectParticipateIn("", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 10: {
+				//PlacedIn
+				Object[] specificColumns = {"", "", "", ""};
+				data = select.selectPlacedIn("", "", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 11: {
+				//PlayedOn
+				Object[] specificColumns = {"", "", ""};
+				data = select.selectPlayedOn("", "");
+				columnNames = specificColumns;
+				break;
+			}
+			
+			case 12: {
+				//PlaysFor
+				Object[] specificColumns = {"", "", ""};
+				data = select.selectPlaysFor("", "");
+				columnNames = specificColumns;
+				break;
+			}
+		
 		}
+		
+		if(data == null) {
+			Object[] specificColumns = {"Error"};
+			columnNames = specificColumns;
+			Object[][] noData = {{"No Data Available"}};
+			data = noData;
+		}
+		
+		Object[][] withExtraColumn = new Object[data.length][data[0].length + 1];
+		
+		for(int i = 0; i < data.length; i++) {
+			withExtraColumn[i][0] = false;
+			for(int j = 1; j <= data[0].length; j++) {
+				withExtraColumn[i][j] = data[i][j - 1];
+			}
+		}
+		
+		dataTable = new JTable(withExtraColumn, columnNames) {
+			
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			@Override
+			public Class getColumnClass(int column) {
+				if(column == 0) {
+					return Boolean.class;
+				}
+				
+				return String.class;
+			}
+			
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex){
+				return columnIndex == 0;
+			}
+			
+		};
+		
+		dataTable.setPreferredScrollableViewportSize(dataTable.getPreferredSize());
+		contentPanel.add(dataTable, BorderLayout.CENTER);
+		
+		return dataTable;
+	}
+
+	private void updatePage() {
+		
+		// set up frame and add standard buttons
+		JFrame frame = new JFrame("Add Page");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setMinimumSize(new Dimension(600,600));
+		JPanel btnPanel = getButtonPanel(frame);
+		frame.add(BorderLayout.SOUTH, btnPanel);
+		
+		// set up pull down menu panel and add label
+		JPanel addPDpanel = new JPanel();
+	    frame.add(BorderLayout.NORTH, addPDpanel);
+		JLabel addLabel = new JLabel("Select something to add: ");
+		addLabel.setBounds(20, 10, 20, 20);
+		addLabel.setVisible(true);
+		addPDpanel.add(addLabel);
+		addPDpanel.setLocation(100, 100);
+
+		// add pull down menu
+        String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
+        					"Event", "Player Uses Gear", "Event Has a Match", 
+        					"Event Held by Organization", "Team in Match", 
+        					"Team Placed In Event", "Player Played in a Match", 
+        					"Player Plays For a Team"};
+        cb = new JComboBox<String>(choices);
+        cb.setSelectedIndex(selectedIndex);
+        cb.setVisible(true);
+	    addPDpanel.add(cb);
+	    frame.pack();
+		frame.setVisible(true);
+		
+		OKbtn = new JButton("OK");
+	    addPDpanel.add(OKbtn);
+
+		JLabel resultLabel = new JLabel("");
+		addPDpanel.add(resultLabel);
+		
+	    OKbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displaySelectedChoice(resultLabel);
+                // TODO: Code for what to do when table is selected
+            }
+        });
+		
+		// TODO Code for Update Page
 	}
 }
