@@ -552,7 +552,7 @@ public class UI {
 					case 8: {
 						// Held
 						for(Object[] i : getDoubleIDRows(dataTable)) {
-							d.deleteHeld((int) i[0], (int) i[1]);
+							d.deleteHeld((int) i[1], (int) i[0]);
 						}
 						break;
 					}
