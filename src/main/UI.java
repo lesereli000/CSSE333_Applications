@@ -15,6 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
 public class UI {
 	
@@ -798,7 +801,7 @@ public class UI {
 	private void updatePage() {
 		
 		// set up frame and add standard buttons
-		JFrame frame = new JFrame("Add Page");
+		JFrame frame = new JFrame("Update Page");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(600,600));
 		JPanel btnPanel = getButtonPanel(frame);
@@ -807,7 +810,7 @@ public class UI {
 		// set up pull down menu panel and add label
 		JPanel addPDpanel = new JPanel();
 	    frame.add(BorderLayout.NORTH, addPDpanel);
-		JLabel addLabel = new JLabel("Select something to add: ");
+		JLabel addLabel = new JLabel("Select something to update: ");
 		addLabel.setBounds(20, 10, 20, 20);
 		addLabel.setVisible(true);
 		addPDpanel.add(addLabel);
@@ -815,11 +818,12 @@ public class UI {
 
 		// add pull down menu
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
-        					"Event", "Player Uses Gear", "Event Has a Match", 
-        					"Event Held by Organization", "Team in Match", 
-        					"Team Placed In Event", "Player Played in a Match", 
-        					"Player Plays For a Team"};
+        					"Event", "Player Uses Gear", "Team in Match", "Team Placed In Event"
+		};
         cb = new JComboBox<String>(choices);
+		if (selectedIndex > 8) {
+			selectedIndex = 8;
+		}
         cb.setSelectedIndex(selectedIndex);
         cb.setVisible(true);
 	    addPDpanel.add(cb);
@@ -829,17 +833,249 @@ public class UI {
 		OKbtn = new JButton("OK");
 	    addPDpanel.add(OKbtn);
 
+		final JPanel[] contentPanel = {new JPanel()};
+		updateTable(cb.getSelectedIndex(), contentPanel[0]);
+		frame.add(contentPanel[0], BorderLayout.CENTER);
+
 		JLabel resultLabel = new JLabel("");
 		addPDpanel.add(resultLabel);
 		
 	    OKbtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displaySelectedChoice(resultLabel);
-                // TODO: Code for what to do when table is selected
-            }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displaySelectedChoice(resultLabel);
+				frame.remove(contentPanel[0]);
+				contentPanel[0] = new JPanel();
+				frame.add(contentPanel[0]);
+				updateTable(cb.getSelectedIndex(), contentPanel[0]);
+			}
         });
-		
-		// TODO Code for Update Page
+	}
+	private void updateTable(int selectedItem, JPanel contentPanel) {
+
+		Select select = new Select(connect);
+		Update update = new Update(connect);
+		JTable dataTable = null;
+
+		switch(selectedItem) {
+
+			case 0: {
+				//Team
+				Object[] columnNames = {"ID", "Team Name", "Sponsor", "Date Founded"};
+				Object[][] data = select.selectTeam("", "", "", "");
+				dataTable = getUpdateTable(data, columnNames, 1);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String teamname = model.getValueAt(row, 1).toString();
+							String sponsor = model.getValueAt(row, 2).toString();
+							String dateFound = model.getValueAt(row, 3).toString();
+							update.updateTeam(id, teamname, sponsor, dateFound);
+						}
+					}
+				});
+				break;
+			}
+
+			case 1: {
+				//Player
+				Object[] columnNames = {"", "", "", "", "", "", ""};
+				Object[][] data = select.selectPlayer("", "", "", "", "", "", "");
+				dataTable = getUpdateTable(data, columnNames, 1);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String nation = model.getValueAt(row, 1).toString();
+							String playerName = model.getValueAt(row, 2).toString();
+							String username = model.getValueAt(row, 3).toString();
+							String dob = model.getValueAt(row, 4).toString();
+							String experience = model.getValueAt(row, 5).toString();
+							String role = model.getValueAt(row, 6).toString();
+							update.updatePlayer(id, nation, playerName, username, dob, experience, role);
+						}
+					}
+				});
+				break;
+			}
+
+			case 2: {
+				//Gear
+				Object[] columnNames = {"", "", "", "", ""};
+				Object[][] data = select.selectGear("", "", "", "", "");
+				dataTable = getUpdateTable(data, columnNames, 1);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String modelNumber = model.getValueAt(row, 0).toString();
+							String manf = model.getValueAt(row, 1).toString();
+							String startingPrice = model.getValueAt(row, 2).toString();
+							String link = model.getValueAt(row, 3).toString();
+							String type = model.getValueAt(row, 4).toString();
+							update.updateGear(modelNumber, manf, type, startingPrice, link);
+						}
+					}
+				});
+				break;
+			}
+
+			case 3: {
+				//Match
+				Object[] columnNames = {"", "", "", ""};
+				Object[][] data = select.selectMatch("", "", "", "");
+				dataTable = getUpdateTable(data, columnNames, 1);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String dateandtime = model.getValueAt(row, 1).toString();
+							String score = model.getValueAt(row, 2).toString();
+							String watchinghours = model.getValueAt(row, 3).toString();
+							update.updateMatch(id, dateandtime, score, watchinghours);
+						}
+					}
+				});
+				break;
+			}
+
+			case 4: {
+				//Org
+				Object[] columnNames = {"", "", "", ""};
+				Object[][] data = select.selectMatchOrganization("", "", "", "");
+				dataTable = getUpdateTable(data, columnNames, 1);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String contact = model.getValueAt(row, 1).toString();
+							String sponsor = model.getValueAt(row, 2).toString();
+							String organizationname = model.getValueAt(row, 3).toString();
+							update.updateMatchOrganization(id, contact, sponsor, organizationname);
+						}
+					}
+				});
+				break;
+			}
+
+			case 5: {
+				//Event
+				Object[] columnNames = {"", "", "", "", ""};
+				Object[][] data = select.selectEvent("", "", "", "", "");
+				dataTable = getUpdateTable(data, columnNames, 1);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String eventname = model.getValueAt(row, 1).toString();
+							String gamename = model.getValueAt(row, 2).toString();
+							String location = model.getValueAt(row, 3).toString();
+							String onlineliveaddress = model.getValueAt(row, 4).toString();
+							update.updateEvent(id, eventname, gamename, location, onlineliveaddress);
+						}
+					}
+				});
+				break;
+			}
+
+			case 6: {
+				//Uses
+				Object[] columnNames = {"Player", "Gear", "Since"};
+				Object[][] data = select.selectUses("", "", "");
+				dataTable = getUpdateTable(data, columnNames, 2);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String playerid = model.getValueAt(row, 0).toString();
+							String gear = model.getValueAt(row, 1).toString();
+							String since = model.getValueAt(row, 2).toString();
+							update.updateUses(playerid, gear, since);
+						}
+					}
+				});
+				break;
+			}
+			case 7: {
+				//ParticipateIn
+				Object[] columnNames = {"", "", ""};
+				Object[][] data = select.selectParticipateIn("", "", "");
+				dataTable = getUpdateTable(data, columnNames, 2);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String playerid = model.getValueAt(row, 0).toString();
+							String matchid = model.getValueAt(row, 1).toString();
+							String stats = model.getValueAt(row, 2).toString();
+							update.updateParticipateIn(playerid, matchid, stats);
+						}
+					}
+				});
+				break;
+			}
+			case 8: {
+				//PlacedIn
+				Object[] columnNames = {"", "", ""};
+				Object[][] data = select.selectPlacedIn("", "", "");
+				dataTable = getUpdateTable(data, columnNames, 2);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String teamid = model.getValueAt(row, 0).toString();
+							String eventid = model.getValueAt(row, 1).toString();
+							String rank = model.getValueAt(row, 2).toString();
+							update.updatePlacedIn(teamid, eventid, rank);
+						}
+					}
+				});
+				break;
+			}
+
+		}
+
+		if(dataTable == null) {
+			Object[] columnNames = {"Error"};
+			Object[][] data = {{"No Data Available"}};
+			dataTable = new JTable(data, columnNames);
+		}
+		dataTable.setEnabled(true);
+		contentPanel.add(dataTable);
+	}
+	private JTable getUpdateTable(Object[][] data, Object[] columnNames, int numKeys) {
+		JTable dataTable = new JTable(data, columnNames) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// Make all cells editable
+				return column >= numKeys;
+			}
+
+		};
+		return dataTable;
 	}
 }
