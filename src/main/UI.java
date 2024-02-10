@@ -214,10 +214,10 @@ public class UI {
         cb.setSelectedIndex(selectedIndex);
         cb.setVisible(true);
 	    addPDpanel.add(cb);
-	    
-	    JPanel contentPanel = new JPanel();
-		readTable(cb.getSelectedIndex(), contentPanel);
-		frame.add(contentPanel, BorderLayout.CENTER);
+
+		final JPanel[] contentPanel = {new JPanel()};
+		readTable(cb.getSelectedIndex(), contentPanel[0]);
+		frame.add(contentPanel[0], BorderLayout.CENTER);
 	    
 	    OKbtn = new JButton("OK");
 	    addPDpanel.add(OKbtn);
@@ -229,10 +229,10 @@ public class UI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 displaySelectedChoice(resultLabel);
-                frame.remove(contentPanel);
-                JPanel contentPanel = new JPanel();
-                frame.add(contentPanel);
-                readTable(cb.getSelectedIndex(), contentPanel);
+                frame.remove(contentPanel[0]);
+				contentPanel[0] = new JPanel();
+                frame.add(contentPanel[0]);
+                readTable(cb.getSelectedIndex(), contentPanel[0]);
             }
         });
 	}
