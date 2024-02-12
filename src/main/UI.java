@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
@@ -28,6 +29,9 @@ public class UI {
     private JButton OKbtn;
     
     private int selectedIndex;    
+    
+    private final int FRAME_WIDTH = 900;
+    private final int FRAME_HEIGHT = 900;
     
     public UI(Connect connect) {
 		new UI(connect, true);
@@ -192,7 +196,7 @@ public class UI {
 		// create the frame
 		JFrame frame = new JFrame("Welcome to the EsportDataTracking App!");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600,600);
+		frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		
 		// create panels
 		JPanel btnPanel = getButtonPanel(frame);
@@ -210,8 +214,8 @@ public class UI {
 		addPDpanel.setLocation(100, 100);
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
 							"Event", "Player Uses Gear", "Event Has a Match", 
-							"Event Held by Organization", "Team in Match", 
-							"Team Placed In Event", "Player Played in a Match", 
+							"Event Held by Organization", "Player in Match", 
+							"Team Placed In Event", "Team Played in a Match", 
 							"Player Plays For a Team"};
         cb = new JComboBox<String>(choices);
         cb.setSelectedIndex(selectedIndex);
@@ -251,16 +255,13 @@ public class UI {
 				//Team
 				Object[] columnNames = {"ID", "Team Name", "Sponsor", "Date Founded"};
 				Object[][] data = select.selectTeam("", "", "", "");
-//				if(data == null) {
-//					break;
-//				}
 				dataTable = new JTable(data, columnNames);
 				break;
 			}
 			
 			case 1: {
 				//Player
-				Object[] columnNames = {"", "", "", "", "", "", ""};
+				Object[] columnNames = {"ID", "Nation", "Player Name", "Username", "DOB", "Experience", "Role"};
 				Object[][] data = select.selectPlayer("", "", "", "", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -268,7 +269,7 @@ public class UI {
 			
 			case 2: {
 				//Gear
-				Object[] columnNames = {"", "", "", "", ""};
+				Object[] columnNames = {"Model Number", "Manufacturer", "Price", "Link", "Type"};
 				Object[][] data = select.selectGear("", "", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -276,7 +277,7 @@ public class UI {
 			
 			case 3: {
 				//Match
-				Object[] columnNames = {"", "", "", ""};
+				Object[] columnNames = {"ID", "Time", "Score", "Watch Hours"};
 				Object[][] data = select.selectMatch("", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -284,7 +285,7 @@ public class UI {
 			
 			case 4: {
 				//Org
-				Object[] columnNames = {"", "", "", ""};
+				Object[] columnNames = {"ID", "Contact Email", "Sponsor", "Organization Name"};
 				Object[][] data = select.selectMatchOrganization("", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -292,7 +293,7 @@ public class UI {
 			
 			case 5: {
 				//Event
-				Object[] columnNames = {"", "", "", "", ""};
+				Object[] columnNames = {"ID", "Live Link", "Location", "Game Name", "Event Name"};
 				Object[][] data = select.selectEvent("", "", "", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -300,7 +301,6 @@ public class UI {
 			
 			case 6: {
 				//Uses
-				// TODO: make table scrollable
 				Object[] columnNames = {"Player", "Gear", "Since"};
 				Object[][] data = select.selectUses("", "", "");
 				dataTable = new JTable(data, columnNames);
@@ -309,7 +309,7 @@ public class UI {
 			
 			case 7: {
 				//Has
-				Object[] columnNames = {"", ""};
+				Object[] columnNames = {"Event ID", "Match ID"};
 				Object[][] data = select.selectHas("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -317,7 +317,7 @@ public class UI {
 			
 			case 8: {
 				//Held
-				Object[] columnNames = {"", ""};
+				Object[] columnNames = {"Organization ID", "Event ID"};
 				Object[][] data = select.selectHeld("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -325,7 +325,7 @@ public class UI {
 			
 			case 9: {
 				//ParticipatesIn
-				Object[] columnNames = {"", "", ""};
+				Object[] columnNames = {"Player ID", "Match ID", "Stats / Notes"};
 				Object[][] data = select.selectParticipateIn("", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -333,7 +333,7 @@ public class UI {
 			
 			case 10: {
 				//PlacedIn
-				Object[] columnNames = {"", "", ""};
+				Object[] columnNames = {"Team ID", "Event ID", "Rank"};
 				Object[][] data = select.selectPlacedIn("", "", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -341,7 +341,7 @@ public class UI {
 			
 			case 11: {
 				//PlayedOn
-				Object[] columnNames = {"", ""};
+				Object[] columnNames = {"Team ID", "Match ID"};
 				Object[][] data = select.selectPlayedOn("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -349,7 +349,7 @@ public class UI {
 			
 			case 12: {
 				//PlaysFor
-				Object[] columnNames = {"", ""};
+				Object[] columnNames = {"Player ID", "Team ID"};
 				Object[][] data = select.selectPlaysFor("", "");
 				dataTable = new JTable(data, columnNames);
 				break;
@@ -363,8 +363,11 @@ public class UI {
 			dataTable = new JTable(data, columnNames);
 		}
 		
+		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
+        dataTable.setFillsViewportHeight(true);
 		dataTable.setEnabled(false);
-		contentPanel.add(dataTable);
+		JScrollPane js = new JScrollPane(dataTable);
+		contentPanel.add(js);
 	}
 
 	private void addPage() {
@@ -373,7 +376,7 @@ public class UI {
 		// set up frame and add standard buttons
 		JFrame frame = new JFrame("Add Page");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setMinimumSize(new Dimension(600,600));
+		frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		JPanel btnPanel = getButtonPanel(frame);
 		frame.add(BorderLayout.SOUTH, btnPanel);
 		
@@ -389,8 +392,8 @@ public class UI {
 		// add pull down menu
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
         					"Event", "Player Uses Gear", "Event Has a Match", 
-        					"Event Held by Organization", "Team in Match", 
-        					"Team Placed In Event", "Player Played in a Match", 
+        					"Event Held by Organization", "Player in Match", 
+        					"Team Placed In Event", "Team Played in a Match", 
         					"Player Plays For a Team"};
         cb = new JComboBox<String>(choices);
         cb.setSelectedIndex(selectedIndex);
@@ -428,7 +431,7 @@ public class UI {
 		// set up frame and add standard buttons
 		JFrame frame = new JFrame("Delete Page");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setMinimumSize(new Dimension(600,600));
+		frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		JPanel btnPanel = getButtonPanel(frame);
 		frame.add(BorderLayout.SOUTH, btnPanel);
 		
@@ -444,8 +447,8 @@ public class UI {
 		// add pull down menu
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
         					"Event", "Player Uses Gear", "Event Has a Match", 
-        					"Event Held by Organization", "Team in Match", 
-        					"Team Placed In Event", "Player Played in a Match", 
+        					"Event Held by Organization", "Player in Match", 
+        					"Team Placed In Event", "Team Played in a Match", 
         					"Player Plays For a Team"};
         cb = new JComboBox<String>(choices);
         cb.setSelectedIndex(selectedIndex);
@@ -652,7 +655,7 @@ public class UI {
 		
 			case 0: {
 				//Team
-				Object[] specificColumns = {"", "ID", "Team Name", "Sponsor", "Date Founded"};
+				Object[] specificColumns = {"Select", "ID", "Team Name", "Sponsor", "Date Founded"};
 				data = select.selectTeam("", "", "", "");
 				columnNames = specificColumns;
 				break;
@@ -660,7 +663,7 @@ public class UI {
 			
 			case 1: {
 				//Player
-				Object[] specificColumns = {"", "", "", "", "", "", "", ""};
+				Object[] specificColumns = {"Select", "ID", "Nation", "Player Name", "Username", "DOB", "Experience", "Role"};
 				data = select.selectPlayer("", "", "", "", "", "", "");
 				columnNames = specificColumns;
 				break;
@@ -668,7 +671,7 @@ public class UI {
 			
 			case 2: {
 				//Gear
-				Object[] specificColumns = {"", "", "", "", "", ""};
+				Object[] specificColumns = {"Select", "Model Number", "Manufacturer", "Price", "Link", "Type"};
 				data = select.selectGear("", "", "", "", "");
 				columnNames = specificColumns;
 				break;
@@ -676,7 +679,7 @@ public class UI {
 			
 			case 3: {
 				//Match
-				Object[] specificColumns = {"", "", "", "", ""};
+				Object[] specificColumns = {"Select", "ID", "Time", "Score", "Watch Hours"};
 				data = select.selectMatch("", "", "", "");
 				columnNames = specificColumns;
 				break;
@@ -684,7 +687,7 @@ public class UI {
 			
 			case 4: {
 				//Org
-				Object[] specificColumns = {"", "", "", "", ""};
+				Object[] specificColumns = {"Select", "ID", "Contact Email", "Sponsor", "Organization Name"};
 				data = select.selectMatchOrganization("", "", "", "");
 				columnNames = specificColumns;
 				break;
@@ -692,7 +695,7 @@ public class UI {
 			
 			case 5: {
 				//Event
-				Object[] specificColumns = {"", "", "", "", "", ""};
+				Object[] specificColumns = {"Select", "ID", "Live Link", "Location", "Game Name", "Event Name"};
 				data = select.selectEvent("", "", "", "", "");
 				columnNames = specificColumns;
 				break;
@@ -700,8 +703,7 @@ public class UI {
 			
 			case 6: {
 				//Uses
-				// TODO: make table scrollable
-				Object[] specificColumns = {"", "Player", "Gear", "Since"};
+				Object[] specificColumns = {"Select", "Player", "Gear", "Since"};
 				data = select.selectUses("", "", "");
 				columnNames = specificColumns;
 				break;
@@ -709,7 +711,7 @@ public class UI {
 			
 			case 7: {
 				//Has
-				Object[] specificColumns = {"", "", ""};
+				Object[] specificColumns = {"Select", "Event ID", "Match ID"};
 				data = select.selectHas("", "");
 				columnNames = specificColumns;
 				break;
@@ -717,7 +719,7 @@ public class UI {
 			
 			case 8: {
 				//Held
-				Object[] specificColumns = {"", "", ""};
+				Object[] specificColumns = {"Select", "Organization ID", "Event ID"};
 				data = select.selectHeld("", "");
 				columnNames = specificColumns;
 				break;
@@ -725,7 +727,7 @@ public class UI {
 			
 			case 9: {
 				//ParticipatesIn
-				Object[] specificColumns = {"", "", "", ""};
+				Object[] specificColumns = {"Select", "Player ID", "Match ID", "Stats / Notes"};
 				data = select.selectParticipateIn("", "", "");
 				columnNames = specificColumns;
 				break;
@@ -733,7 +735,7 @@ public class UI {
 			
 			case 10: {
 				//PlacedIn
-				Object[] specificColumns = {"", "", "", ""};
+				Object[] specificColumns = {"Select", "Team ID", "Event ID", "Rank"};
 				data = select.selectPlacedIn("", "", "");
 				columnNames = specificColumns;
 				break;
@@ -741,7 +743,7 @@ public class UI {
 			
 			case 11: {
 				//PlayedOn
-				Object[] specificColumns = {"", "", ""};
+				Object[] specificColumns = {"Select", "Team ID", "Match ID"};
 				data = select.selectPlayedOn("", "");
 				columnNames = specificColumns;
 				break;
@@ -749,7 +751,7 @@ public class UI {
 			
 			case 12: {
 				//PlaysFor
-				Object[] specificColumns = {"", "", ""};
+				Object[] specificColumns = {"Select", "Player ID", "Team ID"};
 				data = select.selectPlaysFor("", "");
 				columnNames = specificColumns;
 				break;
@@ -792,8 +794,10 @@ public class UI {
 			
 		};
 		
-		dataTable.setPreferredScrollableViewportSize(dataTable.getPreferredSize());
-		contentPanel.add(dataTable, BorderLayout.CENTER);
+		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
+    	dataTable.setFillsViewportHeight(true);
+		JScrollPane js = new JScrollPane(dataTable);
+		contentPanel.add(js);
 		
 		return dataTable;
 	}
@@ -803,7 +807,7 @@ public class UI {
 		// set up frame and add standard buttons
 		JFrame frame = new JFrame("Update Page");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setMinimumSize(new Dimension(600,600));
+		frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		JPanel btnPanel = getButtonPanel(frame);
 		frame.add(BorderLayout.SOUTH, btnPanel);
 		
@@ -818,7 +822,7 @@ public class UI {
 
 		// add pull down menu
         String[] choices = { "Team", "Player", "Gear", "Match", "Match Organization", 
-        					"Event", "Player Uses Gear", "Team in Match", "Team Placed In Event"
+        					"Event", "Player Uses Gear", "Player in Match", "Team Placed In Event"
 		};
         cb = new JComboBox<String>(choices);
 		if (selectedIndex > 8) {
@@ -851,6 +855,7 @@ public class UI {
 			}
         });
 	}
+	
 	private void updateTable(int selectedItem, JPanel contentPanel) {
 
 		Select select = new Select(connect);
@@ -1067,6 +1072,8 @@ public class UI {
 		dataTable.setEnabled(true);
 		contentPanel.add(dataTable);
 	}
+	
+	@SuppressWarnings("serial")
 	private JTable getUpdateTable(Object[][] data, Object[] columnNames, int numKeys) {
 		JTable dataTable = new JTable(data, columnNames) {
 			@Override
