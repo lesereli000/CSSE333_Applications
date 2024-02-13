@@ -146,7 +146,7 @@ public class UI {
 
 		if(userPerms.contains("r")) {
 			JButton mainButton = new JButton("Main");
-			btnPanel.add(mainButton);
+			btnPanel.add(mainButton, BorderLayout.CENTER);
 			mainButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -157,7 +157,7 @@ public class UI {
 		
 		if(userPerms.contains("w")) {
 			JButton addButton = new JButton("Add");
-			btnPanel.add(addButton);
+			btnPanel.add(addButton, BorderLayout.CENTER);
 			addButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -179,7 +179,7 @@ public class UI {
 
 		if(userPerms.contains("d")) {
 			JButton deleteButton = new JButton("Delete");
-			btnPanel.add(deleteButton);
+			btnPanel.add(deleteButton, BorderLayout.CENTER);
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -190,7 +190,7 @@ public class UI {
 		
 		if(userPerms.contains("a")) {
 			JButton adminButton = new JButton("Admin");
-			btnPanel.add(adminButton);
+			btnPanel.add(adminButton, BorderLayout.CENTER);
 			adminButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -1120,7 +1120,6 @@ public class UI {
 		
 		Object[][] data = admin.getPermsTableData();
 		
-	    
 		@SuppressWarnings("serial")
 		JTable dataTable = new JTable(data, columnNames) {
 			@Override
@@ -1134,15 +1133,56 @@ public class UI {
 			public Class getColumnClass(int column) {
 				return column == 1 ? String.class : Boolean.class;
 			}
-
 		};
+		
+		TableModel tableModel = dataTable.getModel();
+		tableModel.addTableModelListener(new TableModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if (e.getType() == TableModelEvent.UPDATE) {
+					int row = e.getFirstRow();
+					String username = tableModel.getValueAt(row, 1).toString();
+					String newPerms = new String("");
+					if((boolean) tableModel.getValueAt(row, 2)) {
+						newPerms = newPerms.concat("r");
+					}
+					if((boolean) tableModel.getValueAt(row, 3)) {
+						newPerms = newPerms.concat("w");
+					}
+					if((boolean) tableModel.getValueAt(row, 4)) {
+						newPerms = newPerms.concat("d");
+					}
+					if((boolean) tableModel.getValueAt(row, 5)) {
+						newPerms = newPerms.concat("a");
+					}
+					admin.updatePermsTable(username, newPerms);
+				}
+				
+			}
+			
+		});
 		
 		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
     	dataTable.setFillsViewportHeight(true);
 		JScrollPane js = new JScrollPane(dataTable);
 		contentPanel.add(js, BorderLayout.CENTER);
 		
-		// TODO: submit button for deletions
+		// submit button for deletions
+		JButton submit = new JButton("Delete Users");
+		contentPanel.add(submit, BorderLayout.SOUTH);
+		submit.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < dataTable.getRowCount(); i++) {
+					if((boolean) dataTable.getValueAt(i, 0)) {
+						admin.removeUser((String) dataTable.getValueAt(i,  1));
+					}
+			     }
+			}
+			
+		});
 		
 		// TODO: interactions call intermediate methods (Admin Class)
 		
