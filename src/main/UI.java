@@ -143,6 +143,17 @@ public class UI {
 	
 	private JPanel getButtonPanel(JFrame frame) {
 		JPanel btnPanel = new JPanel();
+
+		if(userPerms.contains("r")) {
+			JButton mainButton = new JButton("Main");
+			btnPanel.add(mainButton);
+			mainButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gotoPage(frame, "Main");
+				}
+			});
+		}
 		
 		if(userPerms.contains("w")) {
 			JButton addButton = new JButton("Add");
@@ -176,19 +187,6 @@ public class UI {
 				}
 			});
 		}
-		
-
-		if(userPerms.contains("r")) {
-			JButton mainButton = new JButton("Main");
-			btnPanel.add(mainButton);
-			mainButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gotoPage(frame, "Main");
-				}
-			});
-		}
-		
 		
 		if(userPerms.contains("a")) {
 			JButton adminButton = new JButton("Admin");
@@ -1106,16 +1104,48 @@ public class UI {
 	}
 	
 	private void adminPage() {
+		Admin admin = new Admin(connect);
 		
 		// set up frame and add standard buttons
-		JFrame frame = new JFrame("Admin Page");
+		JFrame frame = new JFrame("Manage Permissions");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		JPanel btnPanel = getButtonPanel(frame);
 		frame.add(BorderLayout.SOUTH, btnPanel);
 	    
-	    // TODO: Code for admin operations UI
+		JPanel contentPanel = new JPanel();
+		frame.add(contentPanel, BorderLayout.CENTER);
+		
+		String[] columnNames = {"Select", "Username", "Read", "Write", "Delete", "Admin"};
+		
+		Object[][] data = admin.getPermsTableData();
+		
 	    
+		@SuppressWarnings("serial")
+		JTable dataTable = new JTable(data, columnNames) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// Make all cells editable
+				return column != 1;
+			}
+			
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			@Override
+			public Class getColumnClass(int column) {
+				return column == 1 ? String.class : Boolean.class;
+			}
+
+		};
+		
+		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
+    	dataTable.setFillsViewportHeight(true);
+		JScrollPane js = new JScrollPane(dataTable);
+		contentPanel.add(js, BorderLayout.CENTER);
+		
+		// TODO: submit button for deletions
+		
+		// TODO: interactions call intermediate methods (Admin Class)
+		
 	    frame.pack();
 		frame.setVisible(true);
 	}
