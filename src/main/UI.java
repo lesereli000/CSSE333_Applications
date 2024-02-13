@@ -2,6 +2,7 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -420,15 +421,139 @@ public class UI {
 		JLabel resultLabel = new JLabel("");
 		addPDpanel.add(resultLabel);
 		
+		
+		
+		JPanel actionPanel = new JPanel();
+	    frame.add(BorderLayout.CENTER, actionPanel);
 	    OKbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 displaySelectedChoice(resultLabel);
                 // TODO: Code for what to do when table is selected
+             // call delete code
+                
+				switch(cb.getSelectedIndex()) {
+				
+					case 0: {
+						// Team
+						actionPanel.removeAll();
+						JTextField textField1 = new JTextField(10); 
+	                    actionPanel.add(new JLabel("Text Box 1:"));
+	                    actionPanel.add(textField1);
+	                    JTextField textField2 = new JTextField(10);
+	                    actionPanel.add(new JLabel("Text Box 2:"));
+	                    actionPanel.add(textField2);
+	                    JTextField textField3 = new JTextField(10);
+	                    actionPanel.add(new JLabel("Text Box 3:"));
+	                    actionPanel.add(textField3);
+	                    JTextField textField4 = new JTextField(10);
+	                    actionPanel.add(new JLabel("Text Box 4:"));
+	                    actionPanel.add(textField4);
+						break;
+					}
+					
+					case 1: {
+						// Player
+						actionPanel.removeAll();
+						JTextField textField1 = new JTextField(10); 
+	                    actionPanel.add(new JLabel("Text Box 1:"));
+	                    actionPanel.add(textField1);
+	                    JTextField textField2 = new JTextField(10);
+	                    actionPanel.add(new JLabel("Text Box 2:"));
+	                    actionPanel.add(textField2);
+						
+						break;
+					}
+					
+					case 2: {
+						// Gear
+						actionPanel.removeAll();
+						JTextField textField1 = new JTextField(10); 
+	                    actionPanel.add(new JLabel("Text Box 1:"));
+	                    actionPanel.add(textField1);
+	                    JTextField textField2 = new JTextField(10);
+	                    actionPanel.add(new JLabel("Text Box 2:"));
+	                    actionPanel.add(textField2);
+	                    JTextField textField3 = new JTextField(10);
+	                    actionPanel.add(new JLabel("Text Box 3:"));
+	                    actionPanel.add(textField3);
+						break;
+					}
+					
+					case 3: {
+						// Match
+						
+						break;
+					}
+					
+					case 4: {
+						// Org
+						
+						break;
+					}
+					
+					case 5: {
+						// Event
+						
+						break;
+					}
+					
+					case 6: {
+						// Uses
+						
+						break;
+					}
+					
+					case 7: {
+						// Has
+						
+						break;
+					}
+					
+					case 8: {
+						// Held
+						
+						break;
+					}
+					
+					case 9: {
+						// PlayedOn
+						
+						break;
+					}
+					
+					case 10: {
+						// PlacedIn
+						
+						break;
+					}
+					
+					case 11: {
+						// ParticipateIn
+						
+						break;
+					}
+					
+					case 12: {
+						// PlaysFor
+						
+						break;
+					}
+					
+					
+				
+				}
             }
         });
 	    
+	    
 	    // TODO: Code for add operation UI
+	    
+	    
+	    
+	    
+	    
+	    
 	    
 	    frame.pack();
 		frame.setVisible(true);
@@ -437,6 +562,15 @@ public class UI {
 	private void set (JTable pointer, JTable newTable) {
 		pointer = newTable;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private void deletePage() {
 		
@@ -501,6 +635,7 @@ public class UI {
 			public void actionPerformed(ActionEvent e) {
 				
 				JTable dataTable = ((JTable) contentPanel.getComponent(0));
+				
 				
 				// call delete code
 				switch(cb.getSelectedIndex()) {
@@ -608,6 +743,8 @@ public class UI {
 						}
 						break;
 					}
+					
+					
 				
 				}
 				
