@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,6 +34,8 @@ public class UI {
     private final int FRAME_WIDTH = 900;
     private final int FRAME_HEIGHT = 900;
     
+    private String userPerms;
+    
     public UI(Connect connect) {
 		new UI(connect, true);
 	}
@@ -48,39 +51,36 @@ public class UI {
 	}
 	
 	private void gotoPage(JFrame frame, String newPage) {
+		frame.dispose();
+		frame.setVisible(false);
 		switch (newPage) {
 			case "Main": {
-				frame.dispose();
-				frame.setVisible(false);
 				mainPage();
 				break;
 			}
 			
 			case "Add": {
-				frame.dispose();
-				frame.setVisible(false);
 				addPage();
 				break;
 			}
 			
 			case "Delete": {
-				frame.dispose();
-				frame.setVisible(false);
 				deletePage();
 				break;
 			}
 			
 			case "Update": {
-				frame.dispose();
-				frame.setVisible(false);
 				updatePage();
 				break;
 			}
 			
 			case "Login": {
-				frame.dispose();
-				frame.setVisible(false);
 				loginPage();
+				break;
+			}
+			
+			case "Admin": {
+				adminPage();
 				break;
 			}
 		}
@@ -123,6 +123,7 @@ public class UI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(log.login(user.getText(), pass.getText())) {
+					userPerms = log.getPerms();
 					gotoPage(frame, "Main");
 				}
 			}
@@ -142,47 +143,63 @@ public class UI {
 	
 	private JPanel getButtonPanel(JFrame frame) {
 		JPanel btnPanel = new JPanel();
-		JPanel inputPanel = new JPanel();
-		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
-		inputPanel.setBounds(40, 40, 20, 20);
+		
+		if(userPerms.contains("w")) {
+			JButton addButton = new JButton("Add");
+			btnPanel.add(addButton);
+			addButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gotoPage(frame, "Add");
+				}
+			});
+		}
 
-		JButton mainButton = new JButton("Main");
-		JButton addButton = new JButton("Add");
-		JButton updateButton = new JButton("Update");
-		JButton deleteButton = new JButton("Delete");
-		btnPanel.add(mainButton);
-		btnPanel.add(addButton);
-		btnPanel.add(updateButton);
-		btnPanel.add(deleteButton);
+		if(userPerms.contains("w")) {
+			JButton updateButton = new JButton("Update");
+			btnPanel.add(updateButton);
+			updateButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gotoPage(frame, "Update");
+				}
+			});
+		}
+
+		if(userPerms.contains("d")) {
+			JButton deleteButton = new JButton("Delete");
+			btnPanel.add(deleteButton);
+			deleteButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gotoPage(frame, "Delete");
+				}
+			});
+		}
 		
-		addButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gotoPage(frame, "Add");
-			}
-		});
+
+		if(userPerms.contains("r")) {
+			JButton mainButton = new JButton("Main");
+			btnPanel.add(mainButton);
+			mainButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gotoPage(frame, "Main");
+				}
+			});
+		}
 		
-		updateButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gotoPage(frame, "Update");
-			}
-		});
 		
-		deleteButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gotoPage(frame, "Delete");
-			}
-		});
-		
-		mainButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gotoPage(frame, "Main");
-			}
-		});
-		
+		if(userPerms.contains("a")) {
+			JButton adminButton = new JButton("Admin");
+			btnPanel.add(adminButton);
+			adminButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gotoPage(frame, "Admin");
+				}
+			});
+		}
 		return btnPanel;
 	}
 	
@@ -244,8 +261,7 @@ public class UI {
         });
 	}
 	
-	private void readTable(int selectedItem, JPanel contentPanel) {
-		
+ 	private void readTable(int selectedItem, JPanel contentPanel) {
 		Select select = new Select(connect);
 		JTable dataTable = null;
 		
@@ -915,9 +931,9 @@ public class UI {
 				//Gear
 				Object[] columnNames = {"", "", "", "", ""};
 				Object[][] data = select.selectGear("", "", "", "", "");
-				dataTable = getUpdateTable(data, columnNames, 1);
-				TableModel model = dataTable.getModel();
-				model.addTableModelListener(new TableModelListener() {
+					dataTable = getUpdateTable(data, columnNames, 1);
+					TableModel model = dataTable.getModel();
+					model.addTableModelListener(new TableModelListener() {
 					@Override
 					public void tableChanged(TableModelEvent e) {
 						if (e.getType() == TableModelEvent.UPDATE) {
@@ -1069,8 +1085,11 @@ public class UI {
 			Object[][] data = {{"No Data Available"}};
 			dataTable = new JTable(data, columnNames);
 		}
-		dataTable.setEnabled(true);
-		contentPanel.add(dataTable);
+		
+		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
+    	dataTable.setFillsViewportHeight(true);
+		JScrollPane js = new JScrollPane(dataTable);
+		contentPanel.add(js);
 	}
 	
 	@SuppressWarnings("serial")
@@ -1084,5 +1103,20 @@ public class UI {
 
 		};
 		return dataTable;
+	}
+	
+	private void adminPage() {
+		
+		// set up frame and add standard buttons
+		JFrame frame = new JFrame("Admin Page");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		JPanel btnPanel = getButtonPanel(frame);
+		frame.add(BorderLayout.SOUTH, btnPanel);
+	    
+	    // TODO: Code for admin operations UI
+	    
+	    frame.pack();
+		frame.setVisible(true);
 	}
 }

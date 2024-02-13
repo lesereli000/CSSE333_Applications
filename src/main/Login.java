@@ -23,6 +23,8 @@ public class Login {
 	private static final Base64.Encoder enc = Base64.getEncoder();
 	private static final Base64.Decoder dec = Base64.getDecoder();
 	
+	private String userPerms = "r";
+	
 	public Login(Connect connect) {
 		this.connect = connect;
 	}
@@ -42,6 +44,9 @@ public class Login {
 			
 			String realPass = rs.getString("PasswordHash");
 			byte[] salt = dec.decode(rs.getString("PasswordSalt"));
+			String perms = rs.getString("Permissions");
+			
+			this.userPerms = perms;
 			
 			String userPass = this.hashPassword(salt, password);
 			
@@ -79,7 +84,7 @@ public class Login {
 			
 			int returnCode = cs.getInt(1);
 			connect.close();
-			if(returnCode == 1) {
+			if(returnCode == 0) {
 				JOptionPane.showMessageDialog(null, "Registration Successful. Please Log in.");
 				return true;
 			}
@@ -116,6 +121,10 @@ public class Login {
 			e.printStackTrace();
 		}
 		return getStringFromBytes(hash);
+	}
+	
+	public String getPerms() {
+		return this.userPerms;
 	}
 	
 }
