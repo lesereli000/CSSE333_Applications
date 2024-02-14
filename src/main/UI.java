@@ -559,18 +559,9 @@ public class UI {
 		frame.setVisible(true);
 	}
 	
-	private void set (JTable pointer, JTable newTable) {
+	private <T> void set (T pointer, T newTable) {
 		pointer = newTable;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	private void deletePage() {
 		
@@ -1253,6 +1244,43 @@ public class UI {
 		JPanel contentPanel = new JPanel();
 		frame.add(contentPanel, BorderLayout.CENTER);
 		
+		JTable dataTable = adminTable();
+
+		JScrollPane js = new JScrollPane(dataTable);
+		contentPanel.add(js, BorderLayout.CENTER);
+		
+		// submit button for deletions
+		JButton submit = new JButton("Delete Users");
+		contentPanel.add(submit, BorderLayout.SOUTH);
+		submit.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < dataTable.getRowCount(); i++) {
+					if((boolean) dataTable.getValueAt(i, 0)) {
+						admin.removeUser((String) dataTable.getValueAt(i,  1));
+						js.setEnabled(false);
+		                js.setVisible(false);
+		                contentPanel.remove(js);
+						set(dataTable, adminTable());
+
+						set(js, new JScrollPane(dataTable));
+						js.setVisible(true);
+						js.setEnabled(true);
+						contentPanel.add(js, BorderLayout.CENTER);
+					}
+			     }
+			}
+			
+		});
+		
+	    frame.pack();
+		frame.setVisible(true);
+	}
+	
+	private JTable adminTable() {
+		Admin admin = new Admin(connect);
+		
 		String[] columnNames = {"Select", "Username", "Read", "Write", "Delete", "Admin"};
 		
 		Object[][] data = admin.getPermsTableData();
@@ -1302,28 +1330,7 @@ public class UI {
 		
 		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
     	dataTable.setFillsViewportHeight(true);
-		JScrollPane js = new JScrollPane(dataTable);
-		contentPanel.add(js, BorderLayout.CENTER);
 		
-		// submit button for deletions
-		JButton submit = new JButton("Delete Users");
-		contentPanel.add(submit, BorderLayout.SOUTH);
-		submit.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < dataTable.getRowCount(); i++) {
-					if((boolean) dataTable.getValueAt(i, 0)) {
-						admin.removeUser((String) dataTable.getValueAt(i,  1));
-					}
-			     }
-			}
-			
-		});
-		
-		// TODO: interactions call intermediate methods (Admin Class)
-		
-	    frame.pack();
-		frame.setVisible(true);
+		return dataTable;
 	}
 }
