@@ -385,7 +385,7 @@ public class UI {
 		contentPanel.add(js);
 	}
 
-	private void addPage() {
+ 	private void addPage() {
 		Add a = new Add(connect);
 		
 		// set up frame and add standard buttons
@@ -394,6 +394,7 @@ public class UI {
 		frame.setMinimumSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		JPanel btnPanel = getButtonPanel(frame);
 		frame.add(BorderLayout.SOUTH, btnPanel);
+		frame.setVisible(true);
 		
 		// set up pull down menu panel and add label
 		JPanel addPDpanel = new JPanel();
@@ -415,146 +416,468 @@ public class UI {
         cb.setVisible(true);
 	    addPDpanel.add(cb);
 	    
-	    OKbtn = new JButton("OK");
-	    addPDpanel.add(OKbtn);
+	    JPanel inputPanel = new JPanel();
+	    inputPanel.setMaximumSize(new Dimension(500, 800)); // Increase the height
+	    inputPanel.setLayout(new BorderLayout());
+	    inputPanel.setVisible(false);
+		
+	    
+	    JPanel infoPanel1 = new JPanel();
+	    infoPanel1.setLayout(new BoxLayout(infoPanel1, BoxLayout.Y_AXIS));
+	    frame.add(infoPanel1, BorderLayout.CENTER);
+	    infoPanel1.setVisible(true);
+	    
+	    // Create multiple JTextFields
+        JTextField textField1 = new JTextField(5);
+        JTextField textField2 = new JTextField(5);
+        JTextField textField3 = new JTextField(5);
+        JTextField textField4 = new JTextField(5);
+        JTextField textField5 = new JTextField(5);
+        JTextField textField6 = new JTextField(5);
+        
+        JLabel label1 = new JLabel("Text Field 1:");
+        JLabel label2 = new JLabel("Text Field 2:");
+        JLabel label3 = new JLabel("Text Field 3:");
+        JLabel label4 = new JLabel("Text Field 4:");
+        JLabel label5 = new JLabel("Text Field 5:");
+        JLabel label6 = new JLabel("Text Field 6:");
 
-		JLabel resultLabel = new JLabel("");
-		addPDpanel.add(resultLabel);
-		
-		
-		
-		JPanel actionPanel = new JPanel();
-	    frame.add(BorderLayout.CENTER, actionPanel);
-	    OKbtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                displaySelectedChoice(resultLabel);
-                // TODO: Code for what to do when table is selected
-             // call delete code
-                
+        // Add JTextFields to the JPanel
+        
+        infoPanel1.add(label1);
+        infoPanel1.add(textField1);
+        infoPanel1.add(label2);
+        infoPanel1.add(textField2);
+        infoPanel1.add(label3);
+        infoPanel1.add(textField3);
+        infoPanel1.add(label4);
+        infoPanel1.add(textField4);
+        infoPanel1.add(label5);
+        infoPanel1.add(textField5);
+        infoPanel1.add(label6);
+        infoPanel1.add(textField6);
+
+        
+        textField1.setVisible(false);
+		textField2.setVisible(false);
+		textField3.setVisible(false);
+	    textField4.setVisible(false);
+		textField5.setVisible(false);
+		textField6.setVisible(false);
+		label1.setVisible(false);
+		label2.setVisible(false);
+		label3.setVisible(false);
+		label4.setVisible(false);
+		label5.setVisible(false);
+		label6.setVisible(false);
+        
+        
+	    JButton submit = new JButton("Submit");
+	    inputPanel.add(submit, BorderLayout.EAST);
+	    frame.add(inputPanel, BorderLayout.EAST);
+	    
+	    
+	    submit.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
 				switch(cb.getSelectedIndex()) {
 				
 					case 0: {
-						// Team
-						actionPanel.removeAll();
-						JTextField textField1 = new JTextField(10); 
-	                    actionPanel.add(new JLabel("Text Box 1:"));
-	                    actionPanel.add(textField1);
-	                    JTextField textField2 = new JTextField(10);
-	                    actionPanel.add(new JLabel("Text Box 2:"));
-	                    actionPanel.add(textField2);
-	                    JTextField textField3 = new JTextField(10);
-	                    actionPanel.add(new JLabel("Text Box 3:"));
-	                    actionPanel.add(textField3);
-	                    JTextField textField4 = new JTextField(10);
-	                    actionPanel.add(new JLabel("Text Box 4:"));
-	                    actionPanel.add(textField4);
+						//Team
+						a.addTeam(textField1.getText(), textField2.getText(), textField3.getText());
 						break;
 					}
 					
 					case 1: {
-						// Player
-						actionPanel.removeAll();
-						JTextField textField1 = new JTextField(10); 
-	                    actionPanel.add(new JLabel("Text Box 1:"));
-	                    actionPanel.add(textField1);
-	                    JTextField textField2 = new JTextField(10);
-	                    actionPanel.add(new JLabel("Text Box 2:"));
-	                    actionPanel.add(textField2);
-						
+						//Player
+						a.addPlayer(textField1.getText(), textField2.getText(), textField3.getText(),
+								textField4.getText(), textField5.getText(), textField6.getText());
 						break;
 					}
 					
 					case 2: {
-						// Gear
-						actionPanel.removeAll();
-						JTextField textField1 = new JTextField(10); 
-	                    actionPanel.add(new JLabel("Text Box 1:"));
-	                    actionPanel.add(textField1);
-	                    JTextField textField2 = new JTextField(10);
-	                    actionPanel.add(new JLabel("Text Box 2:"));
-	                    actionPanel.add(textField2);
-	                    JTextField textField3 = new JTextField(10);
-	                    actionPanel.add(new JLabel("Text Box 3:"));
-	                    actionPanel.add(textField3);
+						//Gear
+						a.addGear(textField1.getText(), textField2.getText(), textField3.getText(),
+								textField4.getText(), textField5.getText());
+						
 						break;
 					}
 					
 					case 3: {
-						// Match
+						//Match
+						a.addMatch(textField1.getText(), textField2.getText(), textField3.getText());
 						
 						break;
 					}
 					
 					case 4: {
-						// Org
+						//Org
+						a.addOrg(textField1.getText(), textField2.getText(), textField3.getText());
 						
 						break;
 					}
 					
 					case 5: {
-						// Event
+						//Event
+						a.addEvent(textField1.getText(), textField2.getText(), textField3.getText(),
+								textField4.getText());
 						
 						break;
 					}
 					
 					case 6: {
-						// Uses
+						//Uses
+						a.addUses(textField1.getText(), textField2.getText(), textField3.getText());
 						
 						break;
 					}
 					
 					case 7: {
-						// Has
+						//Has
+						a.addHas(textField1.getText(), textField2.getText());
 						
 						break;
 					}
 					
 					case 8: {
-						// Held
+						//Held
+						a.addHeld(textField1.getText(), textField2.getText());
 						
 						break;
 					}
 					
 					case 9: {
-						// PlayedOn
-						
+						//ParticipatesIn
+						a.addParticipateIn(textField1.getText(), textField2.getText(), textField3.getText());
 						break;
 					}
 					
 					case 10: {
-						// PlacedIn
-						
+						//PlacedIn
+						a.addPlacedIn(textField1.getText(), textField2.getText(), textField3.getText());
 						break;
 					}
 					
 					case 11: {
-						// ParticipateIn
-						
+						//PlayedOn
+						a.addPlayedOn(textField1.getText(), textField2.getText());
 						break;
 					}
 					
 					case 12: {
-						// PlaysFor
-						
+						//PlaysFor
+						a.addPlaysFor(textField1.getText(), textField2.getText());
+						break;
+					}
+				
+					
+				}
+			}
+	    });
+	    
+	    
+	    OKbtn = new JButton("OK");
+	    OKbtn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch(cb.getSelectedIndex()) {
+				
+					case 0: {
+						//Team
+						label1.setText("Team Name: ");
+						label2.setText("Sponser Name: ");
+						label3.setText("Date Found: ");
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Team");
 						break;
 					}
 					
+					case 1: {
+						//Player
+						label1.setText("Nation: ");
+						label2.setText("Player Name: ");
+						label3.setText("Username: ");
+						label4.setText("Bate of Birth: ");
+						label5.setText("Experience: ");
+						label6.setText("Role: ");
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(true);
+						textField5.setVisible(true);
+						textField6.setVisible(true);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(true);
+						label5.setVisible(true);
+						label6.setVisible(true);
+						System.out.println("Add Player");
+						break;
+					}
 					
-				
+					case 2: {
+						//Gear
+						label1.setText("Model Number: ");
+						label2.setText("Manufature: ");
+						label3.setText("Starting Price: ");
+						label4.setText("Link: ");
+						label5.setText("Type: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(true);
+						textField5.setVisible(true);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(true);
+						label5.setVisible(true);
+						label6.setVisible(false);
+						System.out.println("Add Gear");
+						break;
+					}
+					
+					case 3: {
+						//Match
+						label1.setText("Date and Time: ");
+						label2.setText("Score: ");
+						label3.setText("Watching Hours: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Match");
+						break;
+					}
+					
+					case 4: {
+						//Org
+						label1.setText("Contact Info: ");
+						label2.setText("Sponsor Name: ");
+						label3.setText("Organization Name: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Organization");
+						break;
+					}
+					
+					case 5: {
+						//Event
+						label1.setText("Online Live Address: ");
+						label2.setText("Location: ");
+						label3.setText("Game Name: ");
+						label4.setText("Event Name: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(true);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(true);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Event");
+						break;
+					}
+					
+					case 6: {
+						//Uses
+						label1.setText("Player ID: ");
+						label2.setText("Gear: ");
+						label3.setText("Since: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Uses");
+						break;
+					}
+					
+					case 7: {
+						//Has
+						label1.setText("Event ID: ");
+						label2.setText("MatchID: ");
+						
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(false);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(false);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Has");
+						break;
+					}
+					
+					case 8: {
+						//Held
+						label1.setText("Match Organization ID: ");
+						label2.setText("Event ID: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(false);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(false);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add Held");
+						break;
+					}
+					
+					case 9: {
+						//ParticipateIn
+						label1.setText("PlayerID: ");
+						label2.setText("MatchID: ");
+						label3.setText("Statistics: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add ParticipateIn");
+						break;
+					}
+					
+					case 10: {
+						//PlacedIn
+						label1.setText("Team ID: ");
+						label2.setText("Event ID: ");
+						label3.setText("Rank: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(true);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(true);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add PlacedIn");
+						break;
+					}
+					
+					case 11: {
+						//PlayedOn
+						label1.setText("Team ID: ");
+						label2.setText("Match ID: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(false);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(false);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add PlayedOn");
+						break;
+					}
+					
+					case 12: {
+						//PlaysFor
+						label1.setText("Player ID: ");
+						label2.setText("Team ID: ");
+						
+						textField1.setVisible(true);
+						textField2.setVisible(true);
+						textField3.setVisible(false);
+						textField4.setVisible(false);
+						textField5.setVisible(false);
+						textField6.setVisible(false);
+						label1.setVisible(true);
+						label2.setVisible(true);
+						label3.setVisible(false);
+						label4.setVisible(false);
+						label5.setVisible(false);
+						label6.setVisible(false);
+						System.out.println("Add PlaysFor");
+						break;
+					}
+					
 				}
-            }
-        });
-	    
-	    
-	    // TODO: Code for add operation UI
-	    
-	    
-	    
-	    
-	    
-	    
-	    
+				inputPanel.setVisible(true);
+			}
+	    	
+	    });
+	    addPDpanel.add(OKbtn);
+
 	    frame.pack();
 		frame.setVisible(true);
 	}
@@ -1334,3 +1657,5 @@ public class UI {
 		return dataTable;
 	}
 }
+
+
