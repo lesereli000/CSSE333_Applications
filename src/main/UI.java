@@ -2,7 +2,6 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -386,7 +385,7 @@ public class UI {
 		contentPanel.add(js);
 	}
 
-	private void addPage() {
+ 	private void addPage() {
 		Add a = new Add(connect);
 		
 		// set up frame and add standard buttons
@@ -472,51 +471,12 @@ public class UI {
 		label5.setVisible(false);
 		label6.setVisible(false);
         
-        /*
-        JPanel infoPanel1 = new JPanel();
-		infoPanel1.setLayout(new GridBagLayout()); // Use FlowLayout
-		JLabel infoLabel1 = new JLabel("Team Name: ");
-		infoPanel1.add(infoLabel1);
-
-		JTextField info1 = new JTextField();
-		info1.setPreferredSize(new Dimension(500, 25)); // Set preferred size
-		infoPanel1.add(info1);
-		
-		infoPanel1.setVisible(false);
-		//inputPanel.add(infoPanel1, BorderLayout.CENTER);
-	    
-		
-		
-		
-		JPanel infoPanel2 = new JPanel();
-		infoPanel2.setLayout(new GridBagLayout()); // Use FlowLayout
-		JLabel infoLabel2 = new JLabel("Team Name: ");
-		infoPanel2.add(infoLabel2);
-
-		JTextField info2 = new JTextField();
-		info2.setPreferredSize(new Dimension(500, 25)); // Set preferred size
-		infoPanel2.add(info2);
-
-		infoPanel2.setVisible(false);
-		//inputPanel.add(infoPanel2, BorderLayout.CENTER);
-	    
-		
-		JPanel infoPanel3 = new JPanel();
-		infoPanel3.setLayout(new GridBagLayout()); // Use FlowLayout
-		JLabel infoLabel3 = new JLabel("Team Name: ");
-		infoPanel3.add(infoLabel3);
-
-		JTextField info3 = new JTextField();
-		info3.setPreferredSize(new Dimension(500, 25)); // Set preferred size
-		infoPanel3.add(info3);
-
-		infoPanel3.setVisible(false);
-		//inputPanel.add(infoPanel3, BorderLayout.CENTER);
-		
-		*/
-		
+        
 	    JButton submit = new JButton("Submit");
-	    submit.setMaximumSize(new Dimension(300, 20));
+	    inputPanel.add(submit, BorderLayout.EAST);
+	    frame.add(inputPanel, BorderLayout.EAST);
+	    
+	    
 	    submit.addActionListener(new ActionListener(){
 
 			@Override
@@ -616,8 +576,6 @@ public class UI {
 			}
 	    });
 	    
-	    inputPanel.add(submit, BorderLayout.EAST);
-	    frame.add(inputPanel, BorderLayout.EAST);
 	    
 	    OKbtn = new JButton("OK");
 	    OKbtn.addActionListener(new ActionListener(){
@@ -920,12 +878,6 @@ public class UI {
 	    });
 	    addPDpanel.add(OKbtn);
 
-	    frame.pack();
-		frame.setVisible(true);
-		
-		
-		
-	    
 	    frame.pack();
 		frame.setVisible(true);
 	}
@@ -1698,3 +1650,5 @@ public class UI {
 		frame.setVisible(true);
 	}
 }
+
+
