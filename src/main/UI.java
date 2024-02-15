@@ -8,18 +8,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 
 public class UI {
@@ -64,16 +56,16 @@ public class UI {
 				addPage();
 				break;
 			}
-			
-			case "Delete": {
-				deletePage();
-				break;
-			}
-			
-			case "Update": {
-				updatePage();
-				break;
-			}
+
+//			case "Delete": {
+//				deletePage();
+//				break;
+//			}
+//
+//			case "Update": {
+//				updatePage();
+//				break;
+//			}
 			
 			case "Login": {
 				loginPage();
@@ -167,27 +159,27 @@ public class UI {
 			});
 		}
 
-		if(userPerms.contains("w")) {
-			JButton updateButton = new JButton("Update");
-			btnPanel.add(updateButton);
-			updateButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gotoPage(frame, "Update");
-				}
-			});
-		}
-
-		if(userPerms.contains("d")) {
-			JButton deleteButton = new JButton("Delete");
-			btnPanel.add(deleteButton, BorderLayout.CENTER);
-			deleteButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gotoPage(frame, "Delete");
-				}
-			});
-		}
+//		if(userPerms.contains("w")) {
+//			JButton updateButton = new JButton("Update");
+//			btnPanel.add(updateButton);
+//			updateButton.addActionListener(new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					gotoPage(frame, "Update");
+//				}
+//			});
+//		}
+//
+//		if(userPerms.contains("d")) {
+//			JButton deleteButton = new JButton("Delete");
+//			btnPanel.add(deleteButton, BorderLayout.CENTER);
+//			deleteButton.addActionListener(new ActionListener() {
+//				@Override
+//				public void actionPerformed(ActionEvent e) {
+//					gotoPage(frame, "Delete");
+//				}
+//			});
+//		}
 		
 		if(userPerms.contains("a")) {
 			JButton adminButton = new JButton("Admin");
@@ -239,7 +231,7 @@ public class UI {
 	    addPDpanel.add(cb);
 
 		final JPanel[] contentPanel = {new JPanel()};
-		readTable(cb.getSelectedIndex(), contentPanel[0]);
+		readTable(cb.getSelectedIndex(), contentPanel[0], userPerms.contains("w"), userPerms.contains("d"));
 		frame.add(contentPanel[0], BorderLayout.CENTER);
 	    
 	    OKbtn = new JButton("OK");
@@ -247,7 +239,7 @@ public class UI {
 
 		JLabel resultLabel = new JLabel("");
 		addPDpanel.add(resultLabel);
-		
+		Delete d = new Delete(connect);
 	    OKbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -255,14 +247,149 @@ public class UI {
                 frame.remove(contentPanel[0]);
 				contentPanel[0] = new JPanel();
                 frame.add(contentPanel[0]);
-                readTable(cb.getSelectedIndex(), contentPanel[0]);
+				readTable(cb.getSelectedIndex(), contentPanel[0], userPerms.contains("w"), userPerms.contains("d"));
             }
         });
+		JButton submit = new JButton("Submit");
+		submit.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				AllPurposeTable dataTable = (AllPurposeTable) ((JTableHeader) ((JViewport) ((JScrollPane) contentPanel[0].getComponent(0)).getComponent(3)).getComponent(0)).getTable();
+				JViewport view = ((JViewport) ((JScrollPane) contentPanel[0].getComponent(0)).getComponent(3));
+
+				// call delete code
+				switch(cb.getSelectedIndex()) {
+
+					case 0: {
+						// Team
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteTeam((int) id);
+						}
+						break;
+					}
+
+					case 1: {
+						// Player
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deletePlayer((int) id);
+						}
+						break;
+					}
+
+					case 2: {
+						// Gear
+						for(Object model : getSingleIDRows(dataTable)) {
+							d.deleteGear((String) model);
+						}
+						break;
+					}
+
+					case 3: {
+						// Match
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteMatch((int) id);
+						}
+						break;
+					}
+
+					case 4: {
+						// Org
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteOrg((int) id);
+						}
+						break;
+					}
+
+					case 5: {
+						// Event
+						for(Object id : getSingleIDRows(dataTable)) {
+							d.deleteEvent((int) id);
+						}
+						break;
+					}
+
+					case 6: {
+						// Uses
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteUses((int) i[0], (String) i[1]);
+						}
+						break;
+					}
+
+					case 7: {
+						// Has
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteHas((int) i[0], (int) i[1]);
+						}
+						break;
+					}
+
+					case 8: {
+						// Held
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteHeld((int) i[1], (int) i[0]);
+						}
+						break;
+					}
+
+					case 9: {
+						// PlayedOn
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deletePlayedOn((int) i[0], (int) i[1]);
+						}
+						break;
+					}
+
+					case 10: {
+						// PlacedIn
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deletePlacedIn((int) i[0], (int) i[1]);
+						}
+						break;
+					}
+
+					case 11: {
+						// ParticipateIn
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deleteParticipateIn((int) i[0], (int) i[1]);
+						}
+						break;
+					}
+
+					case 12: {
+						// PlaysFor
+						for(Object[] i : getDoubleIDRows(dataTable)) {
+							d.deletePlaysFor((int) i[0], (int) i[1]);
+						}
+						break;
+					}
+
+
+
+				}
+
+				// refresh table output
+				displaySelectedChoice(resultLabel);
+				contentPanel[0].removeAll();
+				readTable(cb.getSelectedIndex(), contentPanel[0], dataTable.write, dataTable.del, true);
+				frame.repaint();
+//				set(dataTable, readTable(cb.getSelectedIndex(), contentPanel[0], dataTable.write, dataTable.del, true));
+
+			}
+
+		});
+
+		btnPanel.add(submit, BorderLayout.NORTH);
 	}
-	
- 	private void readTable(int selectedItem, JPanel contentPanel) {
+	private AllPurposeTable readTable(int selectedItem, JPanel contentPanel, boolean write, boolean del) {
+		return readTable(selectedItem, contentPanel, write, del, true);
+	}
+ 	private AllPurposeTable readTable(int selectedItem, JPanel contentPanel, boolean write, boolean del, boolean override) {
 		Select select = new Select(connect);
-		JTable dataTable = null;
+		Update update = new Update(connect);
+		AllPurposeTable dataTable = null;
 		
 		switch(selectedItem) {
 		
@@ -270,7 +397,23 @@ public class UI {
 				//Team
 				Object[] columnNames = {"ID", "Team Name", "Sponsor", "Date Founded"};
 				Object[][] data = select.selectTeam("", "", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 1, write, del);
+				TableModel model = dataTable.getModel();
+				if (write) {
+					model.addTableModelListener(new TableModelListener() {
+						@Override
+						public void tableChanged(TableModelEvent e) {
+							if (e.getType() == TableModelEvent.UPDATE) {
+								int row = e.getFirstRow();
+								String id = model.getValueAt(row, 0 + (del ? 1 : 0)).toString();
+								String teamname = model.getValueAt(row, 1 + (del ? 1 : 0)).toString();
+								String sponsor = model.getValueAt(row, 2 + (del ? 1 : 0)).toString();
+								String dateFound = model.getValueAt(row, 3 + (del ? 1 : 0)).toString();
+								update.updateTeam(id, teamname, sponsor, dateFound);
+							}
+						}
+					});
+				}
 				break;
 			}
 			
@@ -278,95 +421,209 @@ public class UI {
 				//Player
 				Object[] columnNames = {"ID", "Nation", "Player Name", "Username", "DOB", "Experience", "Role"};
 				Object[][] data = select.selectPlayer("", "", "", "", "", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 1, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String nation = model.getValueAt(row, 1).toString();
+							String playerName = model.getValueAt(row, 2).toString();
+							String username = model.getValueAt(row, 3).toString();
+							String dob = model.getValueAt(row, 4).toString();
+							String experience = model.getValueAt(row, 5).toString();
+							String role = model.getValueAt(row, 6).toString();
+							update.updatePlayer(id, nation, playerName, username, dob, experience, role);
+						}
+					}
+				});
 				break;
 			}
-			
+//
 			case 2: {
 				//Gear
 				Object[] columnNames = {"Model Number", "Manufacturer", "Price", "Link", "Type"};
 				Object[][] data = select.selectGear("", "", "", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 1, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String modelNumber = model.getValueAt(row, 0).toString();
+							String manf = model.getValueAt(row, 1).toString();
+							String startingPrice = model.getValueAt(row, 2).toString();
+							String link = model.getValueAt(row, 3).toString();
+							String type = model.getValueAt(row, 4).toString();
+							update.updateGear(modelNumber, manf, type, startingPrice, link);
+						}
+					}
+				});
 				break;
 			}
-			
+//
 			case 3: {
 				//Match
 				Object[] columnNames = {"ID", "Time", "Score", "Watch Hours"};
 				Object[][] data = select.selectMatch("", "", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 1, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String dateandtime = model.getValueAt(row, 1).toString();
+							String score = model.getValueAt(row, 2).toString();
+							String watchinghours = model.getValueAt(row, 3).toString();
+							update.updateMatch(id, dateandtime, score, watchinghours);
+						}
+					}
+				});
 				break;
 			}
-			
+
 			case 4: {
 				//Org
 				Object[] columnNames = {"ID", "Contact Email", "Sponsor", "Organization Name"};
 				Object[][] data = select.selectMatchOrganization("", "", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 1, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String contact = model.getValueAt(row, 1).toString();
+							String sponsor = model.getValueAt(row, 2).toString();
+							String organizationname = model.getValueAt(row, 3).toString();
+							update.updateMatchOrganization(id, contact, sponsor, organizationname);
+						}
+					}
+				});
 				break;
 			}
-			
+//
 			case 5: {
 				//Event
 				Object[] columnNames = {"ID", "Live Link", "Location", "Game Name", "Event Name"};
 				Object[][] data = select.selectEvent("", "", "", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 1, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String id = model.getValueAt(row, 0).toString();
+							String eventname = model.getValueAt(row, 1).toString();
+							String gamename = model.getValueAt(row, 2).toString();
+							String location = model.getValueAt(row, 3).toString();
+							String onlineliveaddress = model.getValueAt(row, 4).toString();
+							update.updateEvent(id, eventname, gamename, location, onlineliveaddress);
+						}
+					}
+				});
 				break;
 			}
-			
+
 			case 6: {
 				//Uses
 				Object[] columnNames = {"Player", "Gear", "Since"};
 				Object[][] data = select.selectUses("", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String playerid = model.getValueAt(row, 0).toString();
+							String gear = model.getValueAt(row, 1).toString();
+							String since = model.getValueAt(row, 2).toString();
+							update.updateUses(playerid, gear, since);
+						}
+					}
+				});
 				break;
 			}
-			
+
 			case 7: {
 				//Has
 				Object[] columnNames = {"Event ID", "Match ID"};
 				Object[][] data = select.selectHas("", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
 				break;
 			}
-			
+
 			case 8: {
 				//Held
 				Object[] columnNames = {"Organization ID", "Event ID"};
 				Object[][] data = select.selectHeld("", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
 				break;
 			}
-			
+
 			case 9: {
 				//ParticipatesIn
 				Object[] columnNames = {"Player ID", "Match ID", "Stats / Notes"};
 				Object[][] data = select.selectParticipateIn("", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String playerid = model.getValueAt(row, 0).toString();
+							String matchid = model.getValueAt(row, 1).toString();
+							String stats = model.getValueAt(row, 2).toString();
+							update.updateParticipateIn(playerid, matchid, stats);
+						}
+					}
+				});
 				break;
 			}
-			
+
 			case 10: {
 				//PlacedIn
 				Object[] columnNames = {"Team ID", "Event ID", "Rank"};
 				Object[][] data = select.selectPlacedIn("", "", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
+				TableModel model = dataTable.getModel();
+				model.addTableModelListener(new TableModelListener() {
+					@Override
+					public void tableChanged(TableModelEvent e) {
+						if (e.getType() == TableModelEvent.UPDATE) {
+							int row = e.getFirstRow();
+							String teamid = model.getValueAt(row, 0).toString();
+							String eventid = model.getValueAt(row, 1).toString();
+							String rank = model.getValueAt(row, 2).toString();
+							update.updatePlacedIn(teamid, eventid, rank);
+						}
+					}
+				});
 				break;
 			}
-			
+
 			case 11: {
 				//PlayedOn
 				Object[] columnNames = {"Team ID", "Match ID"};
 				Object[][] data = select.selectPlayedOn("", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
 				break;
 			}
-			
+
 			case 12: {
 				//PlaysFor
 				Object[] columnNames = {"Player ID", "Team ID"};
 				Object[][] data = select.selectPlaysFor("", "");
-				dataTable = new JTable(data, columnNames);
+				dataTable = getAllPurposeTable(data, columnNames, 2, write, del);
 				break;
 			}
 		
@@ -375,14 +632,17 @@ public class UI {
 		if(dataTable == null) {
 			Object[] columnNames = {"Error"};
 			Object[][] data = {{"No Data Available"}};
-			dataTable = new JTable(data, columnNames);
+			dataTable = getAllPurposeTable(data, columnNames, 0, write, del);
 		}
 		
 		dataTable.setPreferredScrollableViewportSize(new Dimension(FRAME_WIDTH - 150, FRAME_HEIGHT - 150));
         dataTable.setFillsViewportHeight(true);
-		dataTable.setEnabled(false);
-		JScrollPane js = new JScrollPane(dataTable);
-		contentPanel.add(js);
+		dataTable.setEnabled(true);
+		if (override) {
+			JScrollPane js = new JScrollPane(dataTable);
+			contentPanel.add(js);
+		}
+		return dataTable;
 	}
 
  	private void addPage() {
@@ -1550,6 +1810,59 @@ public class UI {
 				return column >= numKeys;
 			}
 
+		};
+		return dataTable;
+	}
+	class AllPurposeTable extends JTable {
+		public int numKeys;
+		public boolean write;
+		public boolean del;
+		public AllPurposeTable(Object[][] data, Object[] columnNames, int numKeys, boolean write, boolean del) {
+			super(data, columnNames);
+			this.numKeys = numKeys;
+			this.write = write;
+			this.del = del;
+		}
+	}
+	private AllPurposeTable getAllPurposeTable(Object[][] data, Object[] columnNames, int numKeys, boolean write, boolean del) {
+		if (del) {
+			Object[][] withExtraColumn = new Object[data.length][data[0].length + 1];
+
+			for(int i = 0; i < data.length; i++) {
+				withExtraColumn[i][0] = false;
+				for(int j = 1; j <= data[0].length; j++) {
+					withExtraColumn[i][j] = data[i][j - 1];
+				}
+			}
+			Object[] colNames =  new Object[columnNames.length + 1];
+			for (int i = 1; i < columnNames.length + 1; i++) {
+				colNames[i] = columnNames[i-1];
+			}
+			colNames[0] = "Select";
+			columnNames = colNames;
+			data = withExtraColumn;
+		}
+
+		AllPurposeTable dataTable = new AllPurposeTable(data, columnNames, numKeys, write, del) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				if (column == 0 && del) {
+					return true;
+				}
+				if (!write) {
+					return false;
+				}
+				if (del) {
+					return column >= numKeys + 1;
+				}
+
+				// Make all cells editable
+				return column >= numKeys;
+			}
+			@Override
+			public Class getColumnClass(int column) {
+				return column == 0 && del ? Boolean.class : String.class;
+			}
 		};
 		return dataTable;
 	}
